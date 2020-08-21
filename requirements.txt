@@ -1,0 +1,5 @@
+lxml==4.3.3
+python-cas==1.4.0
+requests==2.21.0
+django-formtools>=2.0
+beautifulsoup4>=4.6
