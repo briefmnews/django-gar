@@ -155,7 +155,7 @@ class GARInstitutionForm(ModelForm):
             for subscription in subscriptions:
                 if (
                     subscription.find("idabonnement").text
-                    == self.self.cleaned_data["subscription_id"]
+                    == self.cleaned_data["subscription_id"]
                 ):
                     return subscription.find("debutvalidite").text
 
