@@ -13,6 +13,7 @@ class InstitutionFactory(factory.django.DjangoModelFactory):
     institution_name = factory.Sequence(lambda n: "Lycée {0}".format(n))
     uai = factory.Sequence(lambda n: "{0}".format(n))
     ends_at = datetime.datetime.today()
+    subscription_id = factory.Sequence(lambda n: "prefix_{0}".format(n))
 
 
 class UserFactory(factory.django.DjangoModelFactory):

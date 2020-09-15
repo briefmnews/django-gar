@@ -86,20 +86,20 @@ def form_data():
 
 
 class FormDataBuilder:
-    institution = None
-    ent = None
+    garinstitution = None
 
-    def __init__(self, institution=None):
-        self.institution = institution
+    def __init__(self, garinstitution=None):
+        self.garinstitution = garinstitution
 
     @property
     def data(self):
-        if self.institution:
+        if self.garinstitution:
             form_data = {
-                "uai": self.institution.uai,
-                "institution_name": self.institution.institution_name,
-                "ends_at": self.institution.ends_at,
-                "user": self.institution.user.id,
+                "uai": self.garinstitution.uai,
+                "institution_name": self.garinstitution.institution_name,
+                "ends_at": self.garinstitution.ends_at,
+                "user": self.garinstitution.user.id,
+                "subscription_id": self.garinstitution.subscription_id,
             }
         else:
             user = UserFactory()
@@ -109,6 +109,7 @@ class FormDataBuilder:
                 "institution_name": "dummy",
                 "ends_at": datetime.datetime.today(),
                 "user": user.id,
+                "subscription_id": "dummy-id",
             }
 
         return form_data

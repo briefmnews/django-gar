@@ -67,7 +67,7 @@ class TestGARInstitutionForm:
     ):
         # GIVEN
         institution = user.garinstitution
-        data = form_data(institution=institution).data
+        data = form_data(garinstitution=institution).data
         institution.save()
         mock_request = mocker.patch.object(
             requests,
@@ -88,7 +88,7 @@ class TestGARInstitutionForm:
     ):
         # GIVEN
         institution = user.garinstitution
-        data = form_data(institution=institution).data
+        data = form_data(garinstitution=institution).data
         institution.save()
         error_message = "dummy error message"
         mock_request = mocker.patch.object(
