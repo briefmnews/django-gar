@@ -14,25 +14,15 @@ GAR_CERTIFICATE_PATH = getattr(settings, "GAR_CERTIFICATE_PATH", "")
 GAR_KEY_PATH = getattr(settings, "GAR_KEY_PATH", "")
 
 
-def delete_gar_subscription(uai):
-    url = get_gar_request_url(uai)
+def delete_gar_subscription(subscription_id):
+    url = get_gar_request_url(subscription_id)
     cert = get_gar_certificate()
     headers = get_gar_headers()
     requests.delete(url, cert=cert, headers=headers)
 
 
-def get_gar_subscription_id(uai):
-    """
-    The id of the subscription in the GAR.
-    It needs to be unique even among all organizations
-    """
-    subscription_id = "{}{}".format(GAR_SUBSCRIPTION_PREFIX, uai)
-    return subscription_id
-
-
-def get_gar_request_url(uai):
+def get_gar_request_url(subscription_id):
     base_url = GAR_BASE_SUBSCRIPTION_URL
-    subscription_id = get_gar_subscription_id(uai)
     url = "{}{}".format(base_url, subscription_id)
     return url
 
@@ -47,7 +37,7 @@ def get_gar_headers():
     return headers
 
 
-def get_gar_subscription_end_date(uai):
+def get_gar_subscription_end_date(uai, subscription_id):
     data = """<?xml version="1.0" encoding="UTF-8"?>
     <filtres xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
           <filtre>
@@ -71,5 +61,5 @@ def get_gar_subscription_end_date(uai):
     soup = BeautifulSoup(response.text, "lxml")
     subscriptions = soup.findAll("abonnement")
     for subscription in subscriptions:
-        if subscription.find("idabonnement").text == get_gar_subscription_id(uai):
+        if subscription.find("idabonnement").text == subscription_id:
             return subscription.find("finvalidite").text

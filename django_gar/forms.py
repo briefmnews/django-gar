@@ -1,9 +1,11 @@
 import datetime
 import requests
+import time
 
 from bs4 import BeautifulSoup
 from datetime import datetime
 
+from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm, ValidationError
@@ -12,20 +14,30 @@ from .gar import (
     get_gar_certificate,
     get_gar_headers,
     get_gar_request_url,
-    get_gar_subscription_id,
 )
 from .models import GARInstitution
 
 GAR_DISTRIBUTOR_ID = getattr(settings, "GAR_DISTRIBUTOR_ID", "")
 GAR_RESOURCES_ID = getattr(settings, "GAR_RESOURCES_ID", "")
 GAR_ORGANIZATION_NAME = getattr(settings, "GAR_ORGANIZATION_NAME", "")
+GAR_SUBSCRIPTION_PREFIX = getattr(settings, "GAR_SUBSCRIPTION_PREFIX", "")
 User = get_user_model()
 
 
 class GARInstitutionForm(ModelForm):
+    subscription_id = forms.CharField(
+        widget=forms.TextInput(attrs={"readonly": "readonly"})
+    )
+
     class Meta:
         model = GARInstitution
-        fields = ("uai", "institution_name", "ends_at", "user")
+        fields = ("uai", "institution_name", "ends_at", "user", "subscription_id")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["subscription_id"].initial = "{}{}".format(
+            GAR_SUBSCRIPTION_PREFIX, int(time.time())
+        )
 
     def clean(self):
         data = self.cleaned_data
@@ -54,7 +66,7 @@ class GARInstitutionForm(ModelForm):
                 raise ValidationError(response.text)
 
     def _get_response_from_gar(self, http_method):
-        url = get_gar_request_url(self.clean_uai())
+        url = get_gar_request_url(self.cleaned_data["subscription_id"])
         cert = get_gar_certificate()
         headers = get_gar_headers()
         response = requests.request(
@@ -94,7 +106,7 @@ class GARInstitutionForm(ModelForm):
            <publicCible>ENSEIGNANT</publicCible>
            <publicCible>DOCUMENTALISTE</publicCible>
         </abonnement>""".format(
-            subscription_id=get_gar_subscription_id(uai),
+            subscription_id=self.cleaned_data["subscription_id"],
             distributor_id=GAR_DISTRIBUTOR_ID,
             resources_id=GAR_RESOURCES_ID,
             organization_name=GAR_ORGANIZATION_NAME,
@@ -141,8 +153,9 @@ class GARInstitutionForm(ModelForm):
             soup = BeautifulSoup(response.text, "lxml")
             subscriptions = soup.findAll("abonnement")
             for subscription in subscriptions:
-                if subscription.find("idabonnement").text == get_gar_subscription_id(
-                    uai
+                if (
+                    subscription.find("idabonnement").text
+                    == self.self.cleaned_data["subscription_id"]
                 ):
                     return subscription.find("debutvalidite").text
 

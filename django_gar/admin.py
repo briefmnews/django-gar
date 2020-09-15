@@ -14,7 +14,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
     form = GARInstitutionForm
 
     def delete_model(self, request, obj):
-        delete_gar_subscription(obj.uai)
+        delete_gar_subscription(obj.subscription_id)
         super().delete_model(request, obj)
 
 
