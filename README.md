@@ -56,8 +56,6 @@ python manage.py migrate
 ### Mandatory settings
 Here is the list of all the mandatory settings:
 ```python
-GAR_QUERY_STRING_TRIGGER
-GAR_INACTIVE_USER_REDIRECT
 GAR_BASE_URL
 GAR_BASE_SUBSCRIPTION_URL
 GAR_SUBSCRIPTION_PREFIX
@@ -66,6 +64,13 @@ GAR_CERTIFICATE_PATH
 GAR_KEY_PATH
 GAR_RESOURCES_ID
 GAR_ORGANIZATION_NAME
+```
+
+The optional settings with their default values:
+```python
+GAR_ACTIVE_USER_REDIRECT (default: "/")
+GAR_INACTIVE_USER_REDIRECT (default: "/")
+GAR_QUERY_STRING_TRIGGER (default: "sso_id")
 ```
 
 ## Tests
