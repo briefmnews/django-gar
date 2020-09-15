@@ -13,6 +13,7 @@ class GARInstitution(models.Model):
     institution_name = models.CharField("Nom de l'institution", max_length=255)
     ends_at = models.DateField("Date de fin d'abonnement", null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    subscription_id = models.CharField("id abonnement", max_length=255)
 
     def __str__(self):
         return "{} ({})".format(self.institution_name, self.uai)
