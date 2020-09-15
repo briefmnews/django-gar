@@ -53,7 +53,7 @@ def get_gar_subscription_end_date(uai, subscription_id):
     )
     response = requests.request(
         "GET",
-        "https://abonnement.gar.education.fr/abonnements",
+        "{}{}".format(GAR_BASE_SUBSCRIPTION_URL, "abonnements"),
         data=data,
         cert=get_gar_certificate(),
         headers=get_gar_headers(),
