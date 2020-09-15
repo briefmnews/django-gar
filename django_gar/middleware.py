@@ -10,6 +10,7 @@ from xml.etree.ElementTree import ParseError
 from .backends import GARBackend
 
 GAR_BASE_URL = getattr(settings, "GAR_BASE_URL", "")
+GAR_ACTIVE_USER_REDIRECT = getattr(settings, "GAR_ACTIVE_USER_REDIRECT", "/")
 GAR_INACTIVE_USER_REDIRECT = getattr(settings, "GAR_INACTIVE_USER_REDIRECT", "/")
 GAR_QUERY_STRING_TRIGGER = getattr(settings, "GAR_QUERY_STRING_TRIGGER", "sso_id")
 
@@ -33,6 +34,7 @@ class GARMiddleware:
             user = GARBackend.authenticate(request, uai_numbers=uai_numbers)
             if user:
                 login(request, user, backend="django_gar.backends.GARBackend")
+                return HttpResponseRedirect(GAR_ACTIVE_USER_REDIRECT)
             else:
                 return HttpResponseRedirect(GAR_INACTIVE_USER_REDIRECT)
 
