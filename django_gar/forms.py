@@ -39,6 +39,11 @@ class GARInstitutionForm(ModelForm):
             GAR_SUBSCRIPTION_PREFIX, int(time.time())
         )
 
+        # Disable ends_at field on update form
+        instance = getattr(self, 'instance', None)
+        if instance.pk:
+            self.fields['ends_at'].disabled = True
+
     def clean(self):
         data = self.cleaned_data
         self._create_or_update_gar_subscription()
