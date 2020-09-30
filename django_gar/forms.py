@@ -110,6 +110,7 @@ class GARInstitutionForm(ModelForm):
            <publicCible>ELEVE</publicCible>
            <publicCible>ENSEIGNANT</publicCible>
            <publicCible>DOCUMENTALISTE</publicCible>
+           <publicCible>AUTRE PERSONNEL</publicCible>
         </abonnement>""".format(
             subscription_id=self.cleaned_data["subscription_id"],
             distributor_id=GAR_DISTRIBUTOR_ID,
