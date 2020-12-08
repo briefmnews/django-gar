@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_gar', '0002_garinstitution_subscription_id'),
+        ("django_gar", "0002_garinstitution_subscription_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='garinstitution',
-            name='subscription_id',
-            field=models.CharField(max_length=255, unique=True, verbose_name='id abonnement'),
+            model_name="garinstitution",
+            name="subscription_id",
+            field=models.CharField(
+                max_length=255, unique=True, verbose_name="id abonnement"
+            ),
         ),
     ]

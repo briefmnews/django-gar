@@ -37,18 +37,18 @@ def get_gar_headers():
     return headers
 
 
-def get_gar_subscription_end_date(uai, subscription_id):
+def get_gar_subscription(uai, subscription_id):
     data = """<?xml version="1.0" encoding="UTF-8"?>
-    <filtres xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
-          <filtre>
-                <filtreNom>idDistributeurCom</filtreNom>
-                <filtreValeur>{distributor_id}</filtreValeur>
-          </filtre> 
-          <filtre>
-                <filtreNom>uaiEtab</filtreNom>
-                <filtreValeur>{uai}</filtreValeur>
-          </filtre> 
-    </filtres>""".format(
+        <filtres xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
+              <filtre>
+                    <filtreNom>idDistributeurCom</filtreNom>
+                    <filtreValeur>{distributor_id}</filtreValeur>
+              </filtre> 
+              <filtre>
+                    <filtreNom>uaiEtab</filtreNom>
+                    <filtreValeur>{uai}</filtreValeur>
+              </filtre> 
+        </filtres>""".format(
         distributor_id=GAR_DISTRIBUTOR_ID, uai=uai
     )
     response = requests.request(
@@ -58,8 +58,20 @@ def get_gar_subscription_end_date(uai, subscription_id):
         cert=get_gar_certificate(),
         headers=get_gar_headers(),
     )
+
     soup = BeautifulSoup(response.text, "lxml")
     subscriptions = soup.findAll("abonnement")
     for subscription in subscriptions:
         if subscription.find("idabonnement").text == subscription_id:
-            return subscription.find("finvalidite").text
+            return subscription
+
+    return None
+
+
+def get_gar_subscription_end_date(uai, subscription_id):
+    subscription = get_gar_subscription(uai, subscription_id)
+
+    if subscription:
+        return subscription.find("finvalidite").text
+
+    return None

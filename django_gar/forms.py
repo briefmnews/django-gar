@@ -40,9 +40,9 @@ class GARInstitutionForm(ModelForm):
         )
 
         # Disable ends_at field on update form
-        instance = getattr(self, 'instance', None)
+        instance = getattr(self, "instance", None)
         if instance.pk:
-            self.fields['ends_at'].disabled = True
+            self.fields["ends_at"].disabled = True
 
     def clean(self):
         data = self.cleaned_data
