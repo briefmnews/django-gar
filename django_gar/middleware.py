@@ -41,6 +41,7 @@ class GARMiddleware:
         elif uai_number and uai_number.upper() == "GAR":
             url = self.get_cas_login_url(request)
             request.session["is_gar"] = True
+            request.gar_user = True
             return HttpResponseRedirect(url)
 
         response = self.get_response(request)
