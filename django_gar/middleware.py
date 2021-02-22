@@ -34,6 +34,7 @@ class GARMiddleware:
             user = GARBackend.authenticate(request, uai_numbers=uai_numbers)
             if user:
                 login(request, user, backend="django_gar.backends.GARBackend")
+                request.session["gar_user"] = True
                 return HttpResponseRedirect(GAR_ACTIVE_USER_REDIRECT)
             else:
                 return HttpResponseRedirect(GAR_INACTIVE_USER_REDIRECT)
@@ -41,7 +42,6 @@ class GARMiddleware:
         elif uai_number and uai_number.upper() == "GAR":
             url = self.get_cas_login_url(request)
             request.session["is_gar"] = True
-            request.gar_user = True
             return HttpResponseRedirect(url)
 
         response = self.get_response(request)
