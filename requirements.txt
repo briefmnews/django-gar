@@ -1,3 +1,4 @@
+wheel==0.36.2
 lxml==4.3.3
 python-cas==1.4.0
 requests==2.21.0
