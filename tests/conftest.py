@@ -23,7 +23,8 @@ def user_without_institution():
 @pytest.fixture
 def mock_validate_valid_ticket(mocker, user):
     return mocker.patch(
-        "django_gar.middleware.GARMiddleware.validate_ticket", return_value="GAR",
+        "django_gar.middleware.GARMiddleware.validate_ticket",
+        return_value="GAR",
     )
 
 
