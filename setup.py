@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="django-gar",
-    version="1.4.0",
+    version="1.5.0",
     description="Handle login and ticket validation for french GAR",
     url="https://github.com/briefmnews/django-gar",
     author="Brief.me",
