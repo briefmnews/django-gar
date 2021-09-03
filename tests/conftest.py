@@ -67,6 +67,17 @@ def mock_verification_response(mocker):
 
 
 @pytest.fixture
+def html_content():
+    return (
+        '<html lang="en"><body><p>Le terme économie vient du grec «&nbsp;oikonomia&nbsp;» '
+        "qui signifie «&nbsp;l’administration d’une maison&nbsp;», explique "
+        '<a href="https://www.dictionnaire-academie.fr/article/A9E0288?utm_source=briefeco&amp;referrer=briefeco" rel="noopener" target="_blank">l’Académie française sur son site</a>. '
+        '«&nbsp;Oikonomia&nbsp;» est <a href="https://www.dummy.io/dummy-url" rel="noopener" target="_blank">lui-même la contraction de deux mots</a> en grec&nbsp;: «&nbsp;oikos&nbsp;», '
+        "la maison et «&nbsp;nomos&nbsp;», la loi.</p></body></html>"
+    )
+
+
+@pytest.fixture
 def response_from_gar():
     """Create a response object from GAR ent"""
     return ResponseBuilder
