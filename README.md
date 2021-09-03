@@ -16,6 +16,14 @@ pip install -e git://github.com/briefmnews/django-gar.git@master#egg=django_gar
 ## Setup
 In order to make `django-gar` works, you'll need to follow the steps below.
 
+### Remove external links to be GAR compliant (optional)
+If you want to remove all or some external links to be GAR compliant you can use one of those two solutions:
+* Utility function `remove_external_links`
+* Middleware `GARRemoveExternalLinks`
+
+By default, all external links (html a tags) will be removed. Only relative links will be kept.
+If you want to allow some external links, you can use the setting `GAR_ALLOWED_EXTERNAL_LINKS`.
+a tags with hrefs that starts with the urls found in `GAR_ALLOWED_EXTERNAL_LINKS` won't be removed.
 
 ### Settings
 First you need to add the following configuration to your settings:
@@ -35,7 +43,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     
-    'django_gar.middleware.GARMiddleware',
+    'django_gar.middleware.GARMiddleware', # mandatory
+    'django_gar.middleware.GARRemoveExternalLinks', # optional
     ...
 )
 
@@ -71,6 +80,7 @@ The optional settings with their default values:
 GAR_ACTIVE_USER_REDIRECT (default: "/")
 GAR_INACTIVE_USER_REDIRECT (default: "/")
 GAR_QUERY_STRING_TRIGGER (default: "sso_id")
+GAR_ALLOWED_EXTERNAL_LINKS (default: [])
 ```
 
 ## Tests
