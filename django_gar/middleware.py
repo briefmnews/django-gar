@@ -1,3 +1,5 @@
+import logging
+
 from django.http import HttpResponseRedirect
 
 from django.conf import settings
@@ -8,6 +10,8 @@ from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
 from .backends import GARBackend
+
+logger = logging.getLogger(__name__)
 
 GAR_BASE_URL = getattr(settings, "GAR_BASE_URL", "")
 GAR_ACTIVE_USER_REDIRECT = getattr(settings, "GAR_ACTIVE_USER_REDIRECT", "/")
@@ -63,6 +67,8 @@ class GARMiddleware:
 
         client = self.get_cas_client(request)
         response = client.get_verification_response(cas_ticket)
+
+        logger.info(response)
 
         try:
             tree = ElementTree.fromstring(response)
