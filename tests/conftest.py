@@ -78,6 +78,40 @@ def html_content():
 
 
 @pytest.fixture
+def json_content():
+    return {
+        "rewind": [
+            {
+                "text": "<p><strong>La société d’envoi de résultats de dépistage du Covid-19 Francetest a reconnu aujourd’hui avoir été touchée par une faille de sécurité</strong>, mais a précisé qu’il « n’existe à ce jour aucun élément qui permet de penser que des informations personnelles de patients ou de pharmaciens aient effectivement fuité ». Une enquête publiée par Mediapart dimanche affirme que plus de 700 000 résultats de tests ont été accessibles sur Internet pendant des mois. L’entreprise déclare avoir « remédié » à la faille.</p>",
+                "kicker": "Faille de sécurité",
+            },
+            {
+                "text": "<p>La ministre de la Transformation et de la Fonction publiques, Amélie de Montchalin, a annoncé dans une interview publiée hier soir par Le Parisien que <strong>les agents de la fonction publique pouvaient depuis aujourd’hui télétravailler jusqu’à trois jours par semaine si leurs tâches le permettent</strong>. Les syndicats avaient signé un accord en ce sens en juillet, a confirmé la CGT Services publics à B‌r‌i‌e‌f‌.‌m‌e.</p>",
+                "kicker": "Télétravail",
+            },
+            {
+                "link": {
+                    "url": "https://www.dummy.io/economie-et-social/le-salaire-minimum-en-europe/",
+                    "text": "Lire l’article de Toute l’Europe sur le salaire minimum dans l’UE.",
+                    "title": "",
+                },
+                "text": "<p><strong>Le Premier ministre espagnol, Pedro Sanchez, a annoncé aujourd’hui une « augmentation immédiate » du salaire minimum</strong>, sans en préciser le niveau. En Espagne, le salaire minimum a augmenté à deux reprises depuis 2019. Il s’élève actuellement à 1 108 euros brut contre 858 euros brut en juin 2018, date de l’arrivée du socialiste Pedro Sanchez au poste de chef du gouvernement, selon les chiffres de l’institut européen de statistiques Eurostat.</p>",
+                "kicker": "Espagne",
+            },
+            {
+                "link": {
+                    "url": "https://www.challenges.fr/salon-du-bourget/a400m-la-revanche-de-l-avion-maudit_658139",
+                    "text": "Lire l’article de Challenges publié en 2019 sur la « revanche de l’avion maudit ».",
+                    "title": "",
+                },
+                "text": "<p><strong>Le Kazakhstan a commandé deux avions de transport militaire Airbus A400M</strong>, a annoncé aujourd’hui le constructeur aéronautique européen Airbus. Depuis le lancement effectif du programme en 2003, 174 appareils ont été commandés par huit pays, dont seulement un (la Malaisie) n’est pas partenaire du projet de construction de cet avion. Plus de 100 avions ont été livrés. Aucune commande n’avait été enregistrée depuis 2005.</p>",
+                "kicker": "Aviation",
+            },
+        ]
+    }
+
+
+@pytest.fixture
 def response_from_gar():
     """Create a response object from GAR ent"""
     return ResponseBuilder
