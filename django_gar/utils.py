@@ -5,10 +5,10 @@ from django.conf import settings
 GAR_ALLOWED_EXTERNAL_LINKS = getattr(settings, "GAR_ALLOWED_EXTERNAL_LINKS", [])
 
 
-def remove_external_links(html_content):
+def remove_external_links_from_html(html_content):
     """
     Given a html content, remove external a tags.
-    a tags wit starting urls found in GAR_ALLOWED_EXTERNAL_LINKS won't be removed.
+    a tags with starting urls found in GAR_ALLOWED_EXTERNAL_LINKS won't be removed.
     """
     soup = BeautifulSoup(html_content, "html.parser")
     for link in soup.find_all("a"):

@@ -10,7 +10,7 @@ from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
 from .backends import GARBackend
-from .utils import remove_external_links
+from .utils import remove_external_links_from_html
 
 logger = logging.getLogger(__name__)
 
@@ -120,6 +120,6 @@ class GARRemoveExternalLinks:
             and "Content-Type" in response
             and "text/html" in response["Content-Type"]
         ):
-            response.content = remove_external_links(response.content)
+            response.content = remove_external_links_from_html(response.content)
 
         return response
