@@ -79,7 +79,7 @@ def html_content():
 
 @pytest.fixture
 def json_content():
-    return {
+    json_content = {
         "rewind": [
             {
                 "text": "<p><strong>La société d’envoi de résultats de dépistage du Covid-19 Francetest a reconnu aujourd’hui avoir été touchée par une faille de sécurité</strong>, mais a précisé qu’il « n’existe à ce jour aucun élément qui permet de penser que des informations personnelles de patients ou de pharmaciens aient effectivement fuité ». Une enquête publiée par Mediapart dimanche affirme que plus de 700 000 résultats de tests ont été accessibles sur Internet pendant des mois. L’entreprise déclare avoir « remédié » à la faille.</p>",
@@ -109,6 +109,8 @@ def json_content():
             },
         ]
     }
+
+    return str(json_content)
 
 
 @pytest.fixture
