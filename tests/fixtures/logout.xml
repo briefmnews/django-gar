@@ -1,0 +1,8 @@
+<samlp:LogoutRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    ID="="_-741761874666450647"
+    Version="2.0"
+    IssueInstant="2019-01-15T07:28:06.911Z">
+    <saml:NameID>@NOT_USED@</saml:NameID>
+    <samlp:SessionIndex>ST-2134567</samlp:SessionIndex>
+</samlp:LogoutRequest>

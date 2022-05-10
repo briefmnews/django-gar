@@ -5,7 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
 
-from .factories import UserFactory
+from .factories import UserFactory, GARSessionFactory
 
 
 @pytest.fixture
@@ -18,6 +18,11 @@ def user_without_institution():
     user = UserFactory()
     user.institution.delete()
     return user
+
+
+@pytest.fixture
+def gar_session():
+    return GARSessionFactory()
 
 
 @pytest.fixture
@@ -54,6 +59,16 @@ class RequestBuilder(object):
 
         return request
 
+    @staticmethod
+    def post(
+        path="/",
+        data=None,
+    ):
+        rf = RequestFactory()
+        request = rf.post(path=path, data=data, content_type="application/xml")
+
+        return request
+
 
 @pytest.fixture
 def mock_verification_response(mocker):
@@ -64,6 +79,14 @@ def mock_verification_response(mocker):
             "cas.CASClientV2.get_verification_response",
             return_value=xml_response.read(),
         )
+
+
+@pytest.fixture
+def logout_body():
+    file = "tests/fixtures/logout.xml"
+
+    with open(file, "r") as xml_response:
+        return xml_response.read()
 
 
 @pytest.fixture
