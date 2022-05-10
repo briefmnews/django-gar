@@ -16,7 +16,7 @@ class GARInstitution(models.Model):
     subscription_id = models.CharField("id abonnement", max_length=255, unique=True)
 
     def __str__(self):
-        return "{} ({})".format(self.institution_name, self.uai)
+        return f"{self.institution_name} ({self.uai})"
 
 
 class GARSession(models.Model):
