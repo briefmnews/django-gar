@@ -40,7 +40,7 @@ class GARMiddleware:
             user = GARBackend.authenticate(request, uai_numbers=uai_numbers)
             if user:
                 login(request, user, backend="django_gar.backends.GARBackend")
-                GARSession.objects.update_create(
+                GARSession.objects.update_or_create(
                     session_key=request.session.session_key,
                     defaults={"ticket": cas_ticket},
                 )
