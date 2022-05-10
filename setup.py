@@ -1,8 +1,10 @@
 from setuptools import setup
 
+from django_gar import __version__
+
 setup(
     name="django-gar",
-    version="1.8.0",
+    version=__version__,
     description="Handle login and ticket validation for french GAR",
     url="https://github.com/briefmnews/django-gar",
     author="Brief.me",
