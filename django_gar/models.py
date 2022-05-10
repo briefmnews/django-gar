@@ -17,3 +17,13 @@ class GARInstitution(models.Model):
 
     def __str__(self):
         return "{} ({})".format(self.institution_name, self.uai)
+
+
+class GARSession(models.Model):
+    """Store GAR active session. This will help us to delete user sessions when the user log out from the GAR"""
+
+    ticket = models.CharField("CAS ticket", max_length=255, unique=True)
+    session_key = models.CharField("Django session key", max_length=255, unique=True)
+
+    def __str__(self):
+        return f"ticket: {self.ticket} - session_key: {self.session_key}"

@@ -10,6 +10,7 @@ from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
 from .backends import GARBackend
+from .models import GARSession
 from .utils import remove_external_links_from_html, remove_external_links_from_json
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,10 @@ class GARMiddleware:
             user = GARBackend.authenticate(request, uai_numbers=uai_numbers)
             if user:
                 login(request, user, backend="django_gar.backends.GARBackend")
+                GARSession.objects.update_create(
+                    session_key=request.session.session_key,
+                    defaults={"ticket": cas_ticket},
+                )
                 request.session["gar_user"] = True
                 return HttpResponseRedirect(GAR_ACTIVE_USER_REDIRECT)
             else:
