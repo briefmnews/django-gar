@@ -1,0 +1,1 @@
+logoutRequest='<samlp:LogoutRequest+xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"+ID="LR-6-n9FH0w4kIRdI833POEkdw0-w"+Version="2.0"+IssueInstant="2022-05-13T11:27:16Z"><saml:NameID+xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">@NOT_USED@</saml:NameID><samlp:SessionIndex>2134567</samlp:SessionIndex></samlp:LogoutRequest>'

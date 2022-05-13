@@ -1,4 +1,5 @@
 import logging
+import urllib.parse
 
 from bs4 import BeautifulSoup
 
@@ -16,9 +17,12 @@ logger = logging.getLogger(__name__)
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
     def post(self, request, *args, **kwargs):
-        data = request.body.decode("utf-8")
+        """x-www-form-urlencoded body to decode"""
+        body = request.body.decode("utf-8")
 
-        logger.info(data)
+        logger.info(body)
+
+        data = urllib.parse.parse_qs(body)["logoutRequest"][0]
 
         soup = BeautifulSoup(data, "xml")
         session_index = soup.find("samlp:SessionIndex")
