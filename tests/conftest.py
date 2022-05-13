@@ -65,7 +65,9 @@ class RequestBuilder(object):
         data=None,
     ):
         rf = RequestFactory()
-        request = rf.post(path=path, data=data, content_type="application/xml")
+        request = rf.post(
+            path=path, data=data, content_type="application/x-www-form-urlencoded"
+        )
 
         return request
 
@@ -83,10 +85,10 @@ def mock_verification_response(mocker):
 
 @pytest.fixture
 def logout_body():
-    file = "tests/fixtures/logout.xml"
+    file = "tests/fixtures/logout.txt"
 
-    with open(file, "r") as xml_response:
-        return xml_response.read()
+    with open(file, "r") as text_response:
+        return text_response.read()
 
 
 @pytest.fixture
