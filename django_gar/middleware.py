@@ -40,10 +40,15 @@ class GARMiddleware:
             user = GARBackend.authenticate(request, uai_numbers=uai_numbers)
             if user:
                 login(request, user, backend="django_gar.backends.GARBackend")
+
+                # Session key might not exist at this point.
+                # Calling save will force session to create a session_key
+                request.session.save()
                 GARSession.objects.update_or_create(
                     session_key=request.session.session_key,
                     defaults={"ticket": cas_ticket},
                 )
+
                 request.session["gar_user"] = True
                 return HttpResponseRedirect(GAR_ACTIVE_USER_REDIRECT)
             else:
