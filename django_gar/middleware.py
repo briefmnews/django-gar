@@ -19,6 +19,7 @@ GAR_BASE_URL = getattr(settings, "GAR_BASE_URL", "")
 GAR_ACTIVE_USER_REDIRECT = getattr(settings, "GAR_ACTIVE_USER_REDIRECT", "/")
 GAR_INACTIVE_USER_REDIRECT = getattr(settings, "GAR_INACTIVE_USER_REDIRECT", "/")
 GAR_QUERY_STRING_TRIGGER = getattr(settings, "GAR_QUERY_STRING_TRIGGER", "sso_id")
+GAR_LOGOUT_URL = getattr(settings, "GAR_LOGOUT_URL", "/")
 
 
 class GARMiddleware:
@@ -130,5 +131,21 @@ class GARRemoveExternalLinks:
                 response.content = remove_external_links_from_html(response.content)
             elif "application/json" in response["Content-Type"]:
                 response.content = remove_external_links_from_json(response.content)
+
+        return response
+
+
+class GARLogoutRedirect:
+    """Redirect user to GAR_LOGOUT_URL when logged out from GAR"""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        if request.session.get("gar_logout"):
+            request.session.delete()
+            return HttpResponseRedirect(GAR_LOGOUT_URL)
 
         return response
