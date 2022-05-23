@@ -22,7 +22,7 @@ class TestLogoutView:
         assert logger_messages[0] == logout_body
         assert (
             logger_messages[1]
-            == "cannot delete GAR session as it does not exist anymore"
+            == "cannot log out from GAR session as it does not exist anymore"
         )
 
     def test_with_existing_gar_session(
@@ -40,4 +40,4 @@ class TestLogoutView:
         assert mock_logger.call_count == 2
         logger_messages = [call[0] for call, _ in mock_logger.call_args_list]
         assert logger_messages[0] == logout_body
-        assert logger_messages[1] == f"clearing GAR session {gar_session.session_key}"
+        assert logger_messages[1] == f"request GAR logout {gar_session.session_key}"
