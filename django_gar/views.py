@@ -4,6 +4,7 @@ import urllib.parse
 from bs4 import BeautifulSoup
 
 from django.conf import settings
+from django.contrib.auth import logout
 from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
@@ -23,7 +24,7 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         """logout the user is gar_logout is in session"""
         if "gar_logout" in request.session:
-            self.request.session.delete()
+            logout(request)
 
         return TemplateResponse(request, "django_gar/logout.html", {})
 
