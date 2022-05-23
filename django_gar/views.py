@@ -22,9 +22,8 @@ GAR_LOGOUT_URL = getattr(settings, "GAR_LOGOUT_URL", "/")
 @method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
-        """logout the user is gar_logout is in session"""
-        if "gar_logout" in request.session:
-            logout(request)
+        """logout the user"""
+        logout(request)
 
         return TemplateResponse(request, "django_gar/logout.html", {})
 
