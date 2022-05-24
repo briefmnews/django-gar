@@ -17,4 +17,3 @@ DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
 GAR_BASE_URL = "https://idp-auth.partenaire.test-gar.education.fr/"
 GAR_QUERY_STRING_TRIGGER = "sso_id"
 GAR_ALLOWED_EXTERNAL_LINKS = ["https://www.dummy.io"]
-GAR_LOGOUT_URL = "/logout/"

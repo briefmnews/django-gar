@@ -17,8 +17,6 @@ from .models import GARSession
 
 logger = logging.getLogger(__name__)
 
-GAR_LOGOUT_URL = getattr(settings, "GAR_LOGOUT_URL", "/")
-
 
 class LogoutView(View):
     @method_decorator(csrf_exempt)
