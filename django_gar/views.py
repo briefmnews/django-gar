@@ -4,12 +4,10 @@ import urllib.parse
 from bs4 import BeautifulSoup
 
 from django.conf import settings
-from django.contrib.auth import logout
 from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
@@ -18,14 +16,8 @@ from .models import GARSession
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(View):
-    @method_decorator(csrf_exempt)
-    @method_decorator(never_cache)
-    def dispatch(self, request, *args, **kwargs):
-        """logout the user"""
-        logout(request)
-        return super().dispatch(request, *args, **kwargs)
-
     def get(self, request, *args, **kwargs):
         return TemplateResponse(request, "django_gar/logout.html", {})
 
