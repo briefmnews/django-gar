@@ -45,10 +45,9 @@ class GARInstitutionForm(ModelForm):
             self.fields["ends_at"].disabled = True
 
     def clean(self):
-        data = self.cleaned_data
+        cleaned_data = super().clean()
         self._create_or_update_gar_subscription()
-
-        return data
+        return cleaned_data
 
     def clean_uai(self):
         return self.cleaned_data.get("uai").upper()
