@@ -50,7 +50,7 @@ class GARInstitutionForm(ModelForm):
         return cleaned_data
 
     def clean_uai(self):
-        return self.cleaned_data.get("uai").upper()
+        return self.cleaned_data.get("uai").upper().strip()
 
     def _create_or_update_gar_subscription(self):
         """
