@@ -14,7 +14,7 @@ setup(
     python_requires=">=3.7",
     install_requires=[
         "Django>=2.2",
-        "python-cas==1.4.0",
+        "python-cas>=1.4.0",
         "lxml>=4.2.5",
         "requests>=2.19.1",
     ],
