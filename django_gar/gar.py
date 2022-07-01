@@ -59,6 +59,8 @@ def get_gar_subscription(uai, subscription_id):
         headers=get_gar_headers(),
     )
 
+    assert response.status_code == 200
+
     soup = BeautifulSoup(response.text, "lxml")
     subscriptions = soup.findAll("abonnement")
     for subscription in subscriptions:
