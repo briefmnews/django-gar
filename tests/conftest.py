@@ -16,7 +16,7 @@ def user():
 @pytest.fixture
 def user_without_institution():
     user = UserFactory()
-    user.institution.delete()
+    user.garinstitution.delete()
     return user
 
 

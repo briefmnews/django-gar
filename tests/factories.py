@@ -30,4 +30,4 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     email = factory.Sequence(lambda n: "noel{0}@flantier.com".format(n))
     is_active = True
-    institution = factory.RelatedFactory(InstitutionFactory, "user")
+    garinstitution = factory.RelatedFactory(InstitutionFactory, "user")

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<abonnements xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
+    <abonnement>
+        <idAbonnement>briefeco_1630592291</idAbonnement>
+        <idDistributeurCom>807526603_0000000000000000</idDistributeurCom>
+        <idRessource>ark:/47198/briefeco</idRessource>
+        <typeIdRessource>ark</typeIdRessource>
+        <libelleRessource>Brief.eco</libelleRessource>
+        <debutValidite>2021-09-02T16:18:27.000+02:00</debutValidite>
+        <finValidite>2022-08-15T00:00:00.000+02:00</finValidite>
+        <uaiEtab>0561622J</uaiEtab>
+        <categorieAffectation>transferable</categorieAffectation>
+        <typeAffectation>INDIV</typeAffectation>
+        <nbLicenceGlobale>ILLIMITE</nbLicenceGlobale>
+        <publicCible>ELEVE</publicCible>
+        <publicCible>ENSEIGNANT</publicCible>
+        <publicCible>DOCUMENTALISTE</publicCible>
+        <publicCible>AUTRE PERSONNEL</publicCible>
+    </abonnement>
+    <abonnement>
+        <idAbonnement>briefme_1630592238</idAbonnement>
+        <idDistributeurCom>807526603_0000000000000000</idDistributeurCom>
+        <idRessource>ark:/47198/briefme</idRessource>
+        <typeIdRessource>ark</typeIdRessource>
+        <libelleRessource>Brief.me</libelleRessource>
+        <debutValidite>2021-09-02T16:17:41.000+02:00</debutValidite>
+        <finValidite>2022-08-15T00:00:00.000+02:00</finValidite>
+        <uaiEtab>0561622J</uaiEtab>
+        <categorieAffectation>transferable</categorieAffectation>
+        <typeAffectation>INDIV</typeAffectation>
+        <nbLicenceGlobale>ILLIMITE</nbLicenceGlobale>
+        <publicCible>ELEVE</publicCible>
+        <publicCible>ENSEIGNANT</publicCible>
+        <publicCible>DOCUMENTALISTE</publicCible>
+        <publicCible>AUTRE PERSONNEL</publicCible>
+    </abonnement>
+</abonnements>
