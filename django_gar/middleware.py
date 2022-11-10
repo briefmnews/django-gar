@@ -50,7 +50,9 @@ class GARMiddleware:
                 )
 
                 request.session["gar_user"] = True
-                return HttpResponseRedirect(GAR_ACTIVE_USER_REDIRECT)
+                return HttpResponseRedirect(
+                    request.GET.get("grain", GAR_ACTIVE_USER_REDIRECT)
+                )
             else:
                 return HttpResponseRedirect(GAR_INACTIVE_USER_REDIRECT)
 
