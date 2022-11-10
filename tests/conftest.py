@@ -29,7 +29,7 @@ def gar_session():
 def mock_validate_valid_ticket(mocker, user):
     return mocker.patch(
         "django_gar.middleware.GARMiddleware.validate_ticket",
-        return_value="GAR",
+        return_value=[user.garinstitution.uai],
     )
 
 
@@ -46,12 +46,12 @@ def request_builder():
     return RequestBuilder()
 
 
-class RequestBuilder(object):
+class RequestBuilder:
     @staticmethod
-    def get(path="?"):
+    def get(path="/", user=None):
         rf = RequestFactory()
-        request = rf.get(path)
-        request.user = AnonymousUser()
+        request = rf.get(path=path)
+        request.user = user or AnonymousUser()
 
         middleware = SessionMiddleware()
         middleware.process_request(request)

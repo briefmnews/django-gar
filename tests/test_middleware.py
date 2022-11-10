@@ -36,7 +36,7 @@ class TestGARMiddleware:
         """Testing the __call__ method with uai_number in url"""
         # GIVEN
         uai_number = "GAR"
-        query_params = "/?{}={}".format(GAR_QUERY_STRING_TRIGGER, uai_number)
+        query_params = "?{}={}".format(GAR_QUERY_STRING_TRIGGER, uai_number)
         request = request_builder.get(query_params)
         cas_middleware = GARMiddleware(request)
 
@@ -49,7 +49,7 @@ class TestGARMiddleware:
     def test_when_uai_number_is_gar(self, request_builder):
         """Testing the __call__ method with uai_number in url and is gar"""
         # GIVEN
-        query_params = "/?{}={}".format(GAR_QUERY_STRING_TRIGGER, "gar")
+        query_params = "?{}={}".format(GAR_QUERY_STRING_TRIGGER, "gar")
         request = request_builder.get(query_params)
         cas_middleware = GARMiddleware(request)
 
@@ -59,17 +59,15 @@ class TestGARMiddleware:
         # THEN
         assert settings.GAR_BASE_URL in response.url
 
-    def test_when_cas_ticket_valid(
-        self, mock_validate_valid_ticket, user, request_builder
-    ):
+    def test_when_cas_ticket_valid(self, mock_validate_valid_ticket, request_builder):
         """
         Testing the __call__ method with valid cas_ticket in url and user
         has access (is_active is True)
         """
         # GIVEN
         cas_ticket = "this-is-a-ticket"
-        query_params = "/?ticket={}".format(cas_ticket)
-        request = request_builder.get(query_params)
+        query_params = "?ticket={}".format(cas_ticket)
+        request = request_builder.get(path=query_params)
         request.session["is_gar"] = True
         cas_middleware = GARMiddleware(request_builder.get)
 
