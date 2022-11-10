@@ -98,6 +98,7 @@ class TestGARMiddleware:
         # THEN
         assert response.status_code == 302
         assert mock_validate_invalid_ticket.call_count == 1
+        assert response.url == settings.GAR_INACTIVE_USER_REDIRECT
 
     def test_validate_ticket(self, mock_verification_response, request_builder):
         # GIVEN
