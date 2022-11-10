@@ -107,6 +107,10 @@ class GARMiddleware:
         host = request.get_host()
         url = "{}://{}/?{}={}".format(scheme, host, GAR_QUERY_STRING_TRIGGER, "gar")
 
+        grain = request.GET.get("grain", "")
+        if grain:
+            url += f"&grain={grain}"
+
         return url
 
     def get_cas_client(self, request):
