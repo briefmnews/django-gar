@@ -11,7 +11,6 @@ from xml.etree.ElementTree import ParseError
 
 from .backends import GARBackend
 from .models import GARSession
-from .utils import remove_external_links_from_html, remove_external_links_from_json
 
 logger = logging.getLogger(__name__)
 
@@ -117,20 +116,3 @@ class GARMiddleware:
         client = CASClient(version=3, server_url=GAR_BASE_URL, service_url=service_url)
 
         return client
-
-
-class GARRemoveExternalLinks:
-    """Remove external links from html and json to be GAR compliant"""
-
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        if "gar_user" in request.session and "Content-Type" in response:
-            if "text/html" in response["Content-Type"]:
-                response.content = remove_external_links_from_html(response.content)
-            elif "application/json" in response["Content-Type"]:
-                response.content = remove_external_links_from_json(response.content)
-
-        return response
