@@ -78,6 +78,27 @@ class TestGARMiddleware:
         assert mock_validate_valid_ticket.call_count == 1
         assert response.url == settings.GAR_ACTIVE_USER_REDIRECT
 
+    def test_when_cas_ticket_valid_and_grain(
+        self, mock_validate_valid_ticket, request_builder
+    ):
+        """
+        Redirect the user to a specific url using the 'grain' query string
+        """
+        # GIVEN
+        cas_ticket = "this-is-a-ticket"
+        grain_url = "https://www.dummy.com"
+        query_params = "?ticket={}&grain={}".format(cas_ticket, grain_url)
+        request = request_builder.get(path=query_params)
+        request.session["is_gar"] = True
+        cas_middleware = GARMiddleware(request_builder.get)
+
+        # WHEN
+        response = cas_middleware(request)
+
+        # THEN
+        assert mock_validate_valid_ticket.call_count == 1
+        assert response.url == grain_url
+
     def test_when_cas_ticket_invalid(
         self, mock_validate_invalid_ticket, request_builder
     ):
