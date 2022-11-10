@@ -72,10 +72,11 @@ class TestGARMiddleware:
         cas_middleware = GARMiddleware(request_builder.get)
 
         # WHEN
-        cas_middleware(request)
+        response = cas_middleware(request)
 
         # THEN
         assert mock_validate_valid_ticket.call_count == 1
+        assert response.url == settings.GAR_ACTIVE_USER_REDIRECT
 
     def test_when_cas_ticket_invalid(
         self, mock_validate_invalid_ticket, request_builder
