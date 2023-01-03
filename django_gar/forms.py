@@ -31,7 +31,14 @@ class GARInstitutionForm(ModelForm):
 
     class Meta:
         model = GARInstitution
-        fields = ("uai", "institution_name", "ends_at", "user", "subscription_id")
+        fields = (
+            "uai",
+            "institution_name",
+            "ends_at",
+            "user",
+            "project_code",
+            "subscription_id",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -93,6 +100,7 @@ class GARInstitutionForm(ModelForm):
         When updating a subscription, the uaiEtab child should be removed.
         """
         uai = self.clean_uai()
+        project_code = self.cleaned_data.get("project_code")
         xml = """<?xml version="1.0" encoding="UTF-8"?>
         <abonnement xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
            <idAbonnement>{subscription_id}</idAbonnement>
@@ -106,6 +114,7 @@ class GARInstitutionForm(ModelForm):
            <categorieAffectation>transferable</categorieAffectation>
            <typeAffectation>INDIV</typeAffectation>
            <nbLicenceGlobale>ILLIMITE</nbLicenceGlobale>
+           <codeProjetRessource>{project_code}</codeProjetRessource>
            <publicCible>ELEVE</publicCible>
            <publicCible>ENSEIGNANT</publicCible>
            <publicCible>DOCUMENTALISTE</publicCible>
@@ -118,6 +127,7 @@ class GARInstitutionForm(ModelForm):
             start_date=self._get_gar_start_date(http_method),
             end_date=self.cleaned_data.get("ends_at"),
             uai=uai,
+            project_code=project_code,
         )
 
         if http_method == "POST":

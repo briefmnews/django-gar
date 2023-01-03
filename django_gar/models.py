@@ -14,6 +14,9 @@ class GARInstitution(models.Model):
     ends_at = models.DateField("Date de fin d'abonnement", null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     subscription_id = models.CharField("id abonnement", max_length=255, unique=True)
+    project_code = models.CharField(
+        "Code de projet ressources", max_length=50, null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.institution_name} ({self.uai})"
