@@ -114,11 +114,11 @@ class GARInstitutionForm(ModelForm):
            <categorieAffectation>transferable</categorieAffectation>
            <typeAffectation>INDIV</typeAffectation>
            <nbLicenceGlobale>ILLIMITE</nbLicenceGlobale>
-           <codeProjetRessource>{project_code}</codeProjetRessource>
            <publicCible>ELEVE</publicCible>
            <publicCible>ENSEIGNANT</publicCible>
            <publicCible>DOCUMENTALISTE</publicCible>
            <publicCible>AUTRE PERSONNEL</publicCible>
+           <codeProjetRessource>{project_code}</codeProjetRessource>
         </abonnement>""".format(
             subscription_id=self.cleaned_data["subscription_id"],
             distributor_id=GAR_DISTRIBUTOR_ID,
