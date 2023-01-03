@@ -3,7 +3,6 @@ import urllib.parse
 
 from bs4 import BeautifulSoup
 
-from django.conf import settings
 from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
