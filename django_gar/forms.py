@@ -130,6 +130,11 @@ class GARInstitutionForm(ModelForm):
             project_code=project_code,
         )
 
+        if not project_code:
+            xml = xml.replace(
+                f"<codeProjetRessource>{project_code}</codeProjetRessource>", ""
+            )
+
         if http_method == "POST":
             xml = xml.replace("<uaiEtab>{uai}</uaiEtab>".format(uai=uai), "")
 
