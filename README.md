@@ -1,6 +1,6 @@
 # django-gar
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/) 
-[![Django 2.x](https://img.shields.io/badge/django-2.2-blue.svg)](https://docs.djangoproject.com/en/2.2/)
+[![Django 3.x](https://img.shields.io/badge/django-3.2-blue.svg)](https://docs.djangoproject.com/en/3.2/)
 ![Python CI](https://github.com/briefmnews/django-gar/workflows/Python%20CI/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/briefmnews/django-gar/branch/master/graph/badge.svg)](https://codecov.io/gh/briefmnews/django-gar)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
