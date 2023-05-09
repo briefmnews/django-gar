@@ -6,7 +6,6 @@ User = get_user_model()
 
 
 class GARInstitution(models.Model):
-
     uai = models.CharField(
         "Unité Administrative Immatriculée", max_length=14, unique=True
     )
