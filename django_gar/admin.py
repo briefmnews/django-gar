@@ -12,6 +12,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
     list_select_related = ("user",)
     ordering = ("institution_name",)
     search_fields = ("institution_name", "user__email", "uai", "project_code")
+    list_filter = ["project_code"]
     form = GARInstitutionForm
 
     def delete_model(self, request, obj):
