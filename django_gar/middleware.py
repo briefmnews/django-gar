@@ -3,13 +3,12 @@ import logging
 from django.http import HttpResponseRedirect
 
 from django.conf import settings
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
 from cas import CASClient
 from xml.etree import ElementTree
 from xml.etree.ElementTree import ParseError
 
-from .backends import GARBackend
 from .models import GARSession
 
 logger = logging.getLogger(__name__)
@@ -36,7 +35,7 @@ class GARMiddleware:
             del request.session["is_gar"]
             uai_numbers = self.validate_ticket(request, cas_ticket)
 
-            user = GARBackend.authenticate(request, uai_numbers=uai_numbers)
+            user = authenticate(request, uai_numbers=uai_numbers)
             if user:
                 login(request, user, backend="django_gar.backends.GARBackend")
 
