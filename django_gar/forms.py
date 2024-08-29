@@ -136,7 +136,7 @@ class GARInstitutionForm(ModelForm):
             )
 
         if http_method == "POST":
-            xml = xml.replace("<uaiEtab>{uai}</uaiEtab>".format(uai=uai), "")
+            xml = xml.replace(f"<uaiEtab>{uai}</uaiEtab>", "")
 
         return xml
 
