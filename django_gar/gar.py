@@ -77,3 +77,11 @@ def get_gar_subscription_end_date(uai, subscription_id):
         return subscription.find("finvalidite").text
 
     return None
+
+def get_gar_institution_list():
+    return requests.request(
+        "GET",
+        f"{GAR_BASE_SUBSCRIPTION_URL}etablissements/etablissements.xml",
+        cert=get_gar_certificate(),
+        headers=get_gar_headers(),
+    )
