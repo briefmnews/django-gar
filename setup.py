@@ -13,10 +13,10 @@ setup(
     packages=["django_gar", "django_gar.migrations"],
     python_requires=">=3.7",
     install_requires=[
-        "Django>=3.2",
-        "python-cas>=1.4.0",
-        "lxml>=4.2.5",
-        "requests>=2.19.1",
+        "Django>=4.2",
+        "python-cas>=1.6.0",
+        "lxml>=4.9.4",
+        "requests>=2.29.0",
     ],
     classifiers=[
         "Environment :: Web Environment",
