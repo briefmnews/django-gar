@@ -96,6 +96,14 @@ def mock_get_gar_institution_list(mocker, response_from_gar):
         )
 
 
+@pytest.fixture(autouse=True)
+def mock_delete_subscription_in_gar(mocker, response_from_gar):
+    return mocker.patch(
+        "django_gar.signals.handlers.delete_gar_subscription",
+        return_value=response_from_gar(status_code=204),
+    )
+
+
 @pytest.fixture
 def logout_body():
     file = "tests/fixtures/logout.txt"
