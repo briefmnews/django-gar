@@ -10,7 +10,7 @@ setup(
     author="Brief.me",
     author_email="tech@brief.me",
     license="GNU GPL v3",
-    packages=["django_gar", "django_gar.migrations"],
+    packages=["django_gar", "django_gar.migrations", "django_gar.signals"],
     python_requires=">=3.7",
     install_requires=[
         "Django>=4.2",
