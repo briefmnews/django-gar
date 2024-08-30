@@ -12,8 +12,8 @@ class TestGARInstitutionForm:
     ):
         # GIVEN
         mock_request = mocker.patch.object(
-            requests,
-            "request",
+            GARInstitutionForm,
+            "_get_response_from_gar",
             return_value=response_from_gar(201, "dummy response message"),
         )
 
@@ -28,9 +28,10 @@ class TestGARInstitutionForm:
         self, form_data, mocker, response_from_gar
     ):
         # GIVEN
-        error_message = "dummy error message"
         mock_request = mocker.patch.object(
-            requests, "request", return_value=response_from_gar(400, error_message)
+            GARInstitutionForm,
+            "_get_response_from_gar",
+            return_value=response_from_gar(400, "dummy error message"),
         )
 
         # WHEN

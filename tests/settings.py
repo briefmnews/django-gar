@@ -11,6 +11,8 @@ INSTALLED_APPS = (
     "django_gar",
 )
 
+AUTHENTICATION_BACKENDS = ("django_gar.backends.GARBackend",)
+
 
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
 

@@ -11,7 +11,7 @@ class InstitutionFactory(factory.django.DjangoModelFactory):
         model = GARInstitution
 
     institution_name = factory.Sequence(lambda n: "Lycée {0}".format(n))
-    uai = factory.Sequence(lambda n: "{0}".format(n))
+    uai = "0561641E"
     ends_at = datetime.datetime.today()
     subscription_id = factory.Sequence(lambda n: "prefix_{0}".format(n))
 

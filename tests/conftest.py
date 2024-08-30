@@ -53,7 +53,7 @@ class RequestBuilder:
         request = rf.get(path=path)
         request.user = user or AnonymousUser()
 
-        middleware = SessionMiddleware()
+        middleware = SessionMiddleware("dummy")
         middleware.process_request(request)
         request.session.save()
 
@@ -80,6 +80,19 @@ def mock_verification_response(mocker):
         return mocker.patch(
             "cas.CASClientV2.get_verification_response",
             return_value=xml_response.read(),
+        )
+
+
+@pytest.fixture(autouse=True)
+def mock_get_gar_institution_list(mocker, response_from_gar):
+    file = "tests/fixtures/institution_list.xml"
+
+    with open(file, "r") as xml_response:
+        return mocker.patch(
+            "django_gar.signals.handlers.get_gar_institution_list",
+            return_value=response_from_gar(
+                status_code=200, content=xml_response.read()
+            ),
         )
 
 
@@ -147,10 +160,12 @@ def response_from_gar():
 class ResponseBuilder:
     status_code = None
     text = None
+    content = None
 
-    def __init__(self, status_code, message):
+    def __init__(self, status_code=None, message=None, content=None):
         self.status_code = status_code
         self.text = message
+        self.content = content
 
 
 @pytest.fixture
