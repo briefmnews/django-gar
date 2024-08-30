@@ -1,11 +1,11 @@
 import logging
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 
 import xml.etree.ElementTree as ET
 
 from ..models import GARInstitution
-from ..gar import get_gar_institution_list
+from ..gar import get_gar_institution_list, delete_gar_subscription
 
 logger = logging.getLogger(__name__)
 
@@ -32,3 +32,8 @@ def get_id_ent(sender, instance, **kwargs):
         instance.id_ent = id_ent
     else:
         logger.error(f"id ent not found for uai {instance.uai}")
+
+
+@receiver(post_delete, sender=GARInstitution, dispatch_uid="delete_subscription_in_gar")
+def delete_subscription_in_gar(sender, instance, **kwargs):
+    delete_gar_subscription(instance.subscription_id)
