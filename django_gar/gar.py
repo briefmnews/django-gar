@@ -78,6 +78,7 @@ def get_gar_subscription_end_date(uai, subscription_id):
 
     return None
 
+
 def get_gar_institution_list():
     return requests.request(
         "GET",
