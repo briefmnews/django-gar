@@ -10,6 +10,7 @@ class GARInstitution(models.Model):
         "Unité Administrative Immatriculée", max_length=14, unique=True
     )
     institution_name = models.CharField("Nom de l'institution", max_length=255)
+    id_ent = models.CharField("ID de l'ent", max_length=255, null=True)
     ends_at = models.DateField("Date de fin d'abonnement", null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     subscription_id = models.CharField("id abonnement", max_length=255, unique=True)
