@@ -48,6 +48,7 @@ class GARMiddleware:
                 )
 
                 request.session["gar_user"] = True
+                request.session["gar_uai"] = user.garinstitution.uai
                 return HttpResponseRedirect(
                     request.GET.get("grain", GAR_ACTIVE_USER_REDIRECT)
                 )
