@@ -26,4 +26,4 @@ class GARInstitutionAdmin(admin.ModelAdmin):
                 "Vous pouvez le supprimer et en créer un nouveau."
             )
 
-        return mark_safe(f"<code>{gar_subscription[0]}</code>")
+        return mark_safe(f"<code>{gar_subscription}</code>")
