@@ -1,5 +1,3 @@
-import xml.etree.ElementTree as ET
-
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
@@ -28,19 +26,8 @@ class GARInstitutionAdmin(admin.ModelAdmin):
                 "Vous pouvez le supprimer et en créer un nouveau."
             )
 
-        root = ET.fromstring(gar_subscription)
-        data = {}
-        for child in root:
-            if child.tag in data:
-                if isinstance(data[child.tag], list):
-                    data[child.tag].append(child.text)
-                else:
-                    data[child.tag] = [data[child.tag], child.text]
-            else:
-                data[child.tag] = child.text
-
         response = ""
-        for key, value in data.items():
-            response += f"{key} : {value}<br/>"
+        for element in gar_subscription.find_all():
+            response += f"{element.name} : {element.text}<br/>"
 
         return mark_safe(f"<code>{response}</code>")
