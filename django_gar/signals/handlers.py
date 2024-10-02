@@ -31,7 +31,7 @@ def get_id_ent(sender, instance, **kwargs):
     if id_ent:
         instance.id_ent = id_ent
     else:
-        logger.error(f"id ent not found for uai {instance.uai}")
+        logger.info(f"id ent doesn't exist for uai {instance.uai}")
 
 
 @receiver(post_delete, sender=GARInstitution, dispatch_uid="delete_subscription_in_gar")
