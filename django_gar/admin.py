@@ -18,6 +18,9 @@ class GARInstitutionAdmin(admin.ModelAdmin):
 
     @admin.display(description="Etat de l'abonnement dans le GAR")
     def gar_subscription_response(self, obj):
+        if not obj.uai:
+            return ""
+
         gar_subscription = get_gar_subscription(obj.uai, obj.subscription_id)
 
         if not gar_subscription:
