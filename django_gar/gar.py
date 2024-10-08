@@ -1,13 +1,18 @@
 import requests
 
 from bs4 import BeautifulSoup
+from urllib.parse import urlencode
 
 from django.conf import settings
+
+from .exceptions import DjangoGARException
 
 
 GAR_SUBSCRIPTION_PREFIX = getattr(settings, "GAR_SUBSCRIPTION_PREFIX", "")
 GAR_BASE_SUBSCRIPTION_URL = getattr(settings, "GAR_BASE_SUBSCRIPTION_URL", "")
-
+GAR_ALLOCATIONS_URL = (
+    "https://decompte-affectations.gar.education.fr/decompteaffectations"
+)
 GAR_DISTRIBUTOR_ID = getattr(settings, "GAR_DISTRIBUTOR_ID", "")
 
 GAR_CERTIFICATE_PATH = getattr(settings, "GAR_CERTIFICATE_PATH", "")
@@ -85,4 +90,27 @@ def get_gar_institution_list():
         f"{GAR_BASE_SUBSCRIPTION_URL}etablissements/etablissements.xml",
         cert=get_gar_certificate(),
         headers=get_gar_headers(),
+    )
+
+
+def get_allocations(subscription_id=None, project_code=None):
+    if not subscription_id and not project_code:
+        raise DjangoGARException(
+            status_code=400,
+            message="At least one of subscription_id or project_code is mandatory",
+        )
+    elif subscription_id and project_code:
+        raise DjangoGARException(
+            status_code=400,
+            message="Cannot set subscription_id and project_code at the same time",
+        )
+
+    params = {"codeProjetRessource": project_code}
+    if subscription_id:
+        params = {"idAbonnement": subscription_id}
+
+    return requests.request(
+        "GET",
+        f"{GAR_ALLOCATIONS_URL}?{urlencode(params)}",
+        cert=get_gar_certificate(),
     )
