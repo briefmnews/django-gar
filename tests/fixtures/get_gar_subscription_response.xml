@@ -2,7 +2,7 @@
 <abonnements xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
     <abonnement>
         <idAbonnement>briefeco_1630592291</idAbonnement>
-        <idDistributeurCom>807526603_0000000000000000</idDistributeurCom>
+        <idDistributeurCom>000000_0000000000000000</idDistributeurCom>
         <idRessource>ark:/47198/briefeco</idRessource>
         <typeIdRessource>ark</typeIdRessource>
         <libelleRessource>Brief.eco</libelleRessource>
@@ -19,7 +19,7 @@
     </abonnement>
     <abonnement>
         <idAbonnement>briefme_1630592238</idAbonnement>
-        <idDistributeurCom>807526603_0000000000000000</idDistributeurCom>
+        <idDistributeurCom>000000_0000000000000000</idDistributeurCom>
         <idRessource>ark:/47198/briefme</idRessource>
         <typeIdRessource>ark</typeIdRessource>
         <libelleRessource>Brief.me</libelleRessource>

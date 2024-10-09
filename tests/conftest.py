@@ -53,6 +53,17 @@ def mock_get_allocations_response(mocker, response_from_gar):
 
 
 @pytest.fixture
+def mock_get_gar_subscription(mocker, response_from_gar):
+    file = "tests/fixtures/get_gar_subscription_response.xml"
+    with open(file, "r") as response:
+        return mocker.patch.object(
+            requests,
+            "request",
+            return_value=response_from_gar(200, message=response.read()),
+        )
+
+
+@pytest.fixture
 def request_builder():
     """Create a request object"""
     return RequestBuilder()
