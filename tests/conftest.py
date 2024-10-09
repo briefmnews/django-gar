@@ -48,8 +48,19 @@ def mock_get_allocations_response(mocker, response_from_gar):
         return mocker.patch.object(
             requests,
             "request",
-            return_value=response_from_gar(status_code=200, content=response),
+            return_value=response_from_gar(
+                status_code=200, content=response.read().encode("utf-8")
+            ),
         )
+
+
+@pytest.fixture
+def mock_get_allocations_empty_response(mocker, response_from_gar):
+    return mocker.patch.object(
+        requests,
+        "request",
+        return_value=response_from_gar(status_code=200, content=b""),
+    )
 
 
 @pytest.fixture

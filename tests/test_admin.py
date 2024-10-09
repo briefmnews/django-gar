@@ -50,3 +50,40 @@ class TestGARInstitutionAdmin:
         # THEN
         assert "idabonnement : briefme_1630592238<br/>" in response
         assert "typeaffectation : INDIV<br/>" in response
+
+    def test_get_allocations_no_uai(self, user):
+        # GIVEN
+        gar_institution = user.garinstitution
+        gar_institution.uai = None
+        gar_institution_admin = GARInstitutionAdmin(GARInstitution, AdminSite())
+
+        # WHEN
+        response = gar_institution_admin.get_allocations(gar_institution)
+
+        # THEN
+        assert response == ""
+
+    @pytest.mark.usefixtures("mock_get_allocations_empty_response")
+    def test_get_allocations_with_empty_allocation(self, user):
+        # GIVEN
+        gar_institution = user.garinstitution
+        gar_institution_admin = GARInstitutionAdmin(GARInstitution, AdminSite())
+
+        # WHEN
+        response = gar_institution_admin.get_allocations(gar_institution)
+
+        # THEN
+        assert "L'établissement n'a pas encore affecté la ressource" in response
+
+    @pytest.mark.usefixtures("mock_get_allocations_response")
+    def test_get_allocations_with_csv_data(self, user):
+        # GIVEN
+        gar_institution = user.garinstitution
+        gar_institution_admin = GARInstitutionAdmin(GARInstitution, AdminSite())
+
+        # WHEN
+        response = gar_institution_admin.get_allocations(gar_institution)
+
+        # THEN
+        assert "idAbonnement : briefme_0941295X_1709542737.2902117<br/>" in response
+        assert "cumulAffectationEnseignant : 226<br/>" in response
