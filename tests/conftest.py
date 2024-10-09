@@ -1,5 +1,6 @@
 import datetime
 import pytest
+import requests
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.middleware import SessionMiddleware
@@ -38,6 +39,17 @@ def mock_validate_invalid_ticket(mocker):
     return mocker.patch(
         "django_gar.middleware.GARMiddleware.validate_ticket", return_value=[]
     )
+
+
+@pytest.fixture
+def mock_get_allocations_response(mocker, response_from_gar):
+    file = "tests/fixtures/get_allocations_response"
+    with open(file, "r") as response:
+        return mocker.patch.object(
+            requests,
+            "request",
+            return_value=response_from_gar(status_code=200, content=response),
+        )
 
 
 @pytest.fixture
