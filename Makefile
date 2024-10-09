@@ -16,3 +16,6 @@ install:
 release:
 	git tag -a $(shell python -c "from django_gar import __version__; print(__version__)") -m "$(m)"
 	git push origin --tags
+
+bandit:
+	bandit -c pyproject.toml -r .
