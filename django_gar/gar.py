@@ -9,7 +9,9 @@ from .exceptions import DjangoGARException
 
 
 GAR_SUBSCRIPTION_PREFIX = getattr(settings, "GAR_SUBSCRIPTION_PREFIX", "")
-GAR_BASE_SUBSCRIPTION_URL = getattr(settings, "GAR_BASE_SUBSCRIPTION_URL", "")
+GAR_BASE_SUBSCRIPTION_URL = getattr(
+    settings, "GAR_BASE_SUBSCRIPTION_URL", "https://abonnement.gar.education.fr/"
+)
 GAR_ALLOCATIONS_URL = (
     "https://decompte-affectations.gar.education.fr/decompteaffectations"
 )
