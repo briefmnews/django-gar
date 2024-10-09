@@ -1,7 +1,7 @@
 import csv
 
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
 from .gar import get_gar_subscription, get_allocations
 from .forms import GARInstitutionForm
@@ -36,7 +36,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         for element in gar_subscription.find_all():
             response += f"{element.name} : {element.text}<br/>"
 
-        return mark_safe(f"<code>{response}</code>")
+        return format_html(f"<code>{response}</code>")
 
     @admin.display(description="Etat des affectations")
     def get_allocations(self, obj):
@@ -59,4 +59,4 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         elif response.status_code == 200:
             allocations = "L'établissement n'a pas encore affecté la ressource.<br/>Les informations fournies par le webservice font l’objet d’un traitement asynchrone et sont par conséquent actualisées quotidiennement. Il peut être constaté une latence dans la prise en compte de changements en cas d’affectations / récupérations de licences au sein d’une même journée."
 
-        return mark_safe(f"<code>{allocations}</code>")
+        return format_html(f"<code>{allocations}</code>")

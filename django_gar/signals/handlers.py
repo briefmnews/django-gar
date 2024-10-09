@@ -2,7 +2,7 @@ import logging
 from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 
-import xml.etree.ElementTree as ET
+from defusedxml import ElementTree as ET
 
 from ..models import GARInstitution
 from ..gar import get_gar_institution_list, delete_gar_subscription

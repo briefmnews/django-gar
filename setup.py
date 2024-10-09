@@ -16,6 +16,7 @@ setup(
         "Django>=4.2",
         "python-cas>=1.6.0",
         "lxml>=4.9.4",
+        "defusedxml>=0.7.1",
         "requests>=2.29.0",
     ],
     classifiers=[

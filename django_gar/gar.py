@@ -25,7 +25,7 @@ def delete_gar_subscription(subscription_id):
     url = get_gar_request_url(subscription_id)
     cert = get_gar_certificate()
     headers = get_gar_headers()
-    requests.delete(url, cert=cert, headers=headers)
+    requests.delete(url, cert=cert, headers=headers, timeout=30)
 
 
 def get_gar_request_url(subscription_id):
@@ -66,7 +66,10 @@ def get_gar_subscription(uai, subscription_id):
         headers=get_gar_headers(),
     )
 
-    assert response.status_code == 200
+    if response.status_code != 200:
+        raise DjangoGARException(
+            status_code=response.status_code, message=response.text
+        )
 
     soup = BeautifulSoup(response.text, "lxml")
     subscriptions = soup.findAll("abonnement")

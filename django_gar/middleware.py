@@ -6,8 +6,7 @@ from django.conf import settings
 from django.contrib.auth import login, authenticate
 
 from cas import CASClient
-from xml.etree import ElementTree
-from xml.etree.ElementTree import ParseError
+from defusedxml.ElementTree import fromstring, ParseError
 
 from .models import GARSession
 
@@ -83,7 +82,7 @@ class GARMiddleware:
         logger.info(response)
 
         try:
-            tree = ElementTree.fromstring(response)
+            tree = fromstring(response)
             ns = {"cas": "http://www.yale.edu/tp/cas"}
             auth_success_element = tree.find("cas:authenticationSuccess", ns)
 

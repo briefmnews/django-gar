@@ -67,7 +67,7 @@ class TestGetGarSubscription:
             )
 
         # WHEN / THEN
-        with pytest.raises(AssertionError):
+        with pytest.raises(DjangoGARException):
             get_gar_subscription(
                 user.garinstitution.uai, user.garinstitution.subscription_id
             )
