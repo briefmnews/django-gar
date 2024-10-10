@@ -8,3 +8,6 @@ pytest-factoryboy==2.2.1
 pytest-django==4.5.2
 pytest-pythonpath==0.7.4
 pytest-mock==3.7.0
+setuptools==75.1.0
+twine==5.1.1
+wheel==0.44.0

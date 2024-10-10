@@ -10,7 +10,7 @@ Handle CAS login for the french Gestionnaire d'Accès au Ressources (GAR).
 ## Installation
 Install with [pip](https://pip.pypa.io/en/stable/):
 ```shell
-pip install -e git://github.com/briefmnews/django-gar.git@master#egg=django_gar
+pip install django-gar
 ```
 
 ## Setup
