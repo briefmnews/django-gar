@@ -46,8 +46,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         response = get_allocations(subscription_id=obj.subscription_id)
         decoded_response = response.content.decode("utf-8")
 
-        allocations = decoded_response
-        if response.status_code == 200 and allocations:
+        if response.status_code == 200 and decoded_response:
             lines = decoded_response.splitlines()
             reader = csv.reader(lines, delimiter=";")
             rows = list(reader)
@@ -58,5 +57,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
                 allocations += f"{header} : {value}<br/>"
         elif response.status_code == 200:
             allocations = "L'établissement n'a pas encore affecté la ressource.<br/>Les informations fournies par le webservice font l’objet d’un traitement asynchrone et sont par conséquent actualisées quotidiennement. Il peut être constaté une latence dans la prise en compte de changements en cas d’affectations / récupérations de licences au sein d’une même journée."
+        else:
+            allocations = decoded_response.get("message")
 
         return format_html(f"<code>{allocations}</code>")
