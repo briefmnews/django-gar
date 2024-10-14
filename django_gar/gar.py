@@ -12,8 +12,8 @@ GAR_SUBSCRIPTION_PREFIX = getattr(settings, "GAR_SUBSCRIPTION_PREFIX", "")
 GAR_BASE_SUBSCRIPTION_URL = getattr(
     settings, "GAR_BASE_SUBSCRIPTION_URL", "https://abonnement.gar.education.fr/"
 )
-GAR_ALLOCATIONS_URL = (
-    "https://decompte-affectations.gar.education.fr/decompteaffectations"
+GAR_ALLOCATIONS_URL = getattr(
+    settings, "GAR_ALLOCATIONS_URL", "https://decompte-affectations.gar.education.fr/decompteaffectations"
 )
 GAR_DISTRIBUTOR_ID = getattr(settings, "GAR_DISTRIBUTOR_ID", "")
 
