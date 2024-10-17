@@ -1,6 +1,8 @@
 import csv
+import datetime
 
 from django.urls import path
+from django.conf import settings
 from django.contrib import admin, messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, reverse
@@ -9,6 +11,8 @@ from django.utils.html import format_html
 from .gar import get_gar_subscription, get_allocations
 from .forms import GARInstitutionForm
 from .models import GARInstitution
+
+GAR_RESOURCES_ID = getattr(settings, "GAR_RESOURCES_ID", "")
 
 
 @admin.register(GARInstitution)
@@ -109,6 +113,30 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
         rows = [line.split(";") for line in data.splitlines()]
 
-        writer.writerows(rows)
+        filtered_rows = [rows[0]]
+
+        filtered_rows += [row for row in rows[1:] if settings.GAR_RESOURCES_ID in row]
+
+        # Add institutions with no affectations
+        existing_uais = {row[0] for row in filtered_rows[1:]}
+        gar_institutions = self.model.objects.filter(
+            project_code=project_code, ends_at__gte=datetime.datetime.now().date()
+        )
+        filtered_rows += [
+            [
+                gar_institution.uai,
+                gar_institution.subscription_id,
+                project_code,
+                settings.GAR_RESOURCES_ID,
+                0,
+                0,
+                0,
+                0,
+            ]
+            for gar_institution in gar_institutions
+            if gar_institution.uai not in existing_uais
+        ]
+
+        writer.writerows(filtered_rows)
 
         return response
