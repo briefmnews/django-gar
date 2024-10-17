@@ -113,17 +113,29 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
         rows = [line.split(";") for line in data.splitlines()]
 
-        filtered_rows = [rows[0]]
+        filtered_rows = [["Institution Name"] + rows[0]]
 
-        filtered_rows += [row for row in rows[1:] if settings.GAR_RESOURCES_ID in row]
+        gar_institutions = self.model.objects.filter(project_code=project_code)
 
-        # Add institutions with no affectations
-        existing_uais = {row[0] for row in filtered_rows[1:]}
-        gar_institutions = self.model.objects.filter(
-            project_code=project_code, ends_at__gte=datetime.datetime.now().date()
-        )
         filtered_rows += [
             [
+                (
+                    gar_institutions.get(uai=row[0]).institution_name
+                    if gar_institutions.filter(uai=row[0]).exists()
+                    else "-"
+                )
+            ]
+            + row
+            for row in rows[1:]
+            if settings.GAR_RESOURCES_ID in row
+        ]
+
+        # Add institutions with no affectations
+        existing_uais = {row[1] for row in filtered_rows[1:]}
+
+        filtered_rows += [
+            [
+                gar_institution.institution_name,
                 gar_institution.uai,
                 gar_institution.subscription_id,
                 project_code,
