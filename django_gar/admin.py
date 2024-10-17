@@ -1,6 +1,9 @@
 import csv
 
-from django.contrib import admin
+from django.urls import path
+from django.contrib import admin, messages
+from django.http import HttpResponse
+from django.shortcuts import redirect, reverse
 from django.utils.html import format_html
 
 from .gar import get_gar_subscription, get_allocations
@@ -18,6 +21,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
     search_fields = ("institution_name", "user__email", "uai", "project_code")
     list_filter = ["project_code"]
     form = GARInstitutionForm
+    change_list_template = "admin/django_gar/change_list.html"
 
     @admin.display(description="Etat de l'abonnement dans le GAR")
     def gar_subscription_response(self, obj):
@@ -61,3 +65,50 @@ class GARInstitutionAdmin(admin.ModelAdmin):
             allocations = decoded_response.get("message")
 
         return format_html(f"<code>{allocations}</code>")
+
+    def get_urls(self):
+        urlpatterns = super().get_urls()
+
+        allocations_report_url = [
+            path(
+                "allocations-report/generate/",
+                self.admin_site.admin_view(self.allocations_report),
+                name="{app_label}_{model_name}_generate_allocations_report".format(
+                    app_label=self.model._meta.app_label,
+                    model_name=self.model._meta.model_name,
+                ),
+            )
+        ]
+
+        return allocations_report_url + urlpatterns
+
+    def allocations_report(self, request):
+        project_code = request.GET.get("project_code")
+
+        if not project_code:
+            messages.success(
+                request,
+                "Impossible de télécharger le rapport d’affectations, le code projet ressource est introuvable",
+            )
+            return redirect(
+                reverse(
+                    "admin:{}_{}_changelist".format(
+                        self.model._meta.app_label, self.model._meta.model_name
+                    )
+                )
+            )
+
+        allocations_response = get_allocations(project_code=project_code)
+        data = allocations_response.content.decode("utf-8")
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = (
+            f'attachment; filename="rapport_affectations_{project_code}.csv"'
+        )
+
+        writer = csv.writer(response)
+        rows = [line.split(";") for line in data.splitlines()]
+
+        writer.writerows(rows)
+
+        return response
