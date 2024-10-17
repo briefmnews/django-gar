@@ -113,7 +113,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
         rows = [line.split(";") for line in data.splitlines()]
 
-        filtered_rows = [["Institution Name"] + rows[0]]
+        filtered_rows = [["InstitutionName"] + rows[0]]
 
         gar_institutions = self.model.objects.filter(project_code=project_code)
 
