@@ -135,7 +135,9 @@ class TestGARMiddleware:
         assert "0561641E" in uai_numbers
         mock_verification_response.assert_called_once()
 
-    def test_validate_ticket_parse_error(self, request_builder):
+    def test_validate_ticket_parse_error(
+        self, mock_verification_response_error, request_builder
+    ):
         # GIVEN
         request = request_builder.get()
         request.session["is_gar"] = True

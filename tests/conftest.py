@@ -117,6 +117,14 @@ def mock_verification_response(mocker):
         )
 
 
+@pytest.fixture
+def mock_verification_response_error(mocker):
+    return mocker.patch(
+        "cas.CASClientV2.get_verification_response",
+        return_value="",
+    )
+
+
 @pytest.fixture(autouse=True)
 def mock_get_gar_institution_list(mocker, response_from_gar):
     file = "tests/fixtures/institution_list.xml"
