@@ -1,9 +1,9 @@
 # django-gar
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/) 
 [![Django 4.x](https://img.shields.io/badge/django-4.2-blue.svg)](https://docs.djangoproject.com/en/4.2/)
-![Python CI](https://github.com/briefmnews/django-gar/workflows/Python%20CI/badge.svg?branch=master)
+[![Python CI](https://github.com/briefmnews/django-gar/actions/workflows/workflow.yml/badge.svg)](https://github.com/briefmnews/django-gar/actions/workflows/workflow.yml)
 [![codecov](https://codecov.io/gh/briefmnews/django-gar/branch/master/graph/badge.svg)](https://codecov.io/gh/briefmnews/django-gar)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)  
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)  
 Handle CAS login for the french Gestionnaire d'Accès au Ressources (GAR).
 
