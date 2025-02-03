@@ -1,5 +1,4 @@
 import csv
-import datetime
 
 from django.urls import path
 from django.conf import settings
