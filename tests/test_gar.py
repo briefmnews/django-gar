@@ -4,8 +4,8 @@ from urllib.parse import urlencode
 
 from django_gar.exceptions import DjangoGARException
 from django_gar.gar import (
-    get_gar_subscription, 
-    get_allocations, 
+    get_gar_subscription,
+    get_allocations,
     GAR_ALLOCATIONS_URL,
     get_gar_subscription_end_date,
     get_gar_institution_list,
@@ -22,7 +22,7 @@ class TestGetGarSubscription:
         # GIVEN
         user.garinstitution.uai = "0561622J"
         user.garinstitution.subscription_id = "briefeco_1630592291"
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
         with open(
             "tests/fixtures/get_gar_subscription_response.xml", "r"
         ) as xml_response:
@@ -44,7 +44,7 @@ class TestGetGarSubscription:
     def test_with_wrong_subscription_id(self, user, mocker, response_from_gar):
         # GIVEN
         user.garinstitution.uai = "0561622J"
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
         with open(
             "tests/fixtures/get_gar_subscription_response.xml", "r"
         ) as xml_response:
@@ -66,7 +66,7 @@ class TestGetGarSubscription:
     def test_with_status_code_not_200(self, user, mocker, response_from_gar):
         # GIVEN
         user.garinstitution.subscription_id = "briefeco_1630592291"
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
         with open(
             "tests/fixtures/get_gar_subscription_response.xml", "r"
         ) as xml_response:
@@ -87,7 +87,7 @@ class TestGetGarSubscription:
     def test_with_empty_response(self, user, mocker, response_from_gar):
         # GIVEN
         user.garinstitution.subscription_id = "briefeco_1630592291"
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
         mock_request = mocker.patch.object(
             requests,
             "request",
@@ -211,7 +211,9 @@ class TestGetAllocations:
 
         # THEN
         assert mock_request.call_count == 1
-        expected_url = f"{GAR_ALLOCATIONS_URL}?{urlencode({'idAbonnement': subscription_id})}"
+        expected_url = (
+            f"{GAR_ALLOCATIONS_URL}?{urlencode({'idAbonnement': subscription_id})}"
+        )
         mock_request.assert_called_with(
             "GET",
             expected_url,
@@ -232,7 +234,9 @@ class TestGetAllocations:
 
         # THEN
         assert mock_request.call_count == 1
-        expected_url = f"{GAR_ALLOCATIONS_URL}?{urlencode({'codeProjetRessource': project_code})}"
+        expected_url = (
+            f"{GAR_ALLOCATIONS_URL}?{urlencode({'codeProjetRessource': project_code})}"
+        )
         mock_request.assert_called_with(
             "GET",
             expected_url,
@@ -243,13 +247,17 @@ class TestGetAllocations:
         # WHEN/THEN
         with pytest.raises(DjangoGARException) as exc:
             get_allocations()
-        assert "At least one of subscription_id or project_code is mandatory" in str(exc.value)
+        assert "At least one of subscription_id or project_code is mandatory" in str(
+            exc.value
+        )
 
     def test_with_both_parameters(self):
         # WHEN/THEN
         with pytest.raises(DjangoGARException) as exc:
             get_allocations(subscription_id="test", project_code="test")
-        assert "Cannot set subscription_id and project_code at the same time" in str(exc.value)
+        assert "Cannot set subscription_id and project_code at the same time" in str(
+            exc.value
+        )
 
 
 class TestDeleteGarSubscription:
@@ -271,7 +279,7 @@ class TestDeleteGarSubscription:
             f"{GAR_BASE_SUBSCRIPTION_URL}test_subscription",
             cert=mocker.ANY,
             headers=mocker.ANY,
-            timeout=30
+            timeout=30,
         )
 
     def test_failed_deletion(self, user, mocker, response_from_gar):
@@ -292,7 +300,7 @@ class TestDeleteGarSubscription:
             f"{GAR_BASE_SUBSCRIPTION_URL}test_subscription",
             cert=mocker.ANY,
             headers=mocker.ANY,
-            timeout=30
+            timeout=30,
         )
 
 

@@ -14,8 +14,7 @@ User = get_user_model()
 
 class GARInstitutionForm(ModelForm):
     subscription_id = forms.CharField(
-        widget=forms.TextInput(attrs={"readonly": "readonly"}),
-        required=False
+        widget=forms.TextInput(attrs={"readonly": "readonly"}), required=False
     )
 
     class Meta:

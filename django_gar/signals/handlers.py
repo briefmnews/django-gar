@@ -11,9 +11,13 @@ from django.dispatch import receiver
 from defusedxml import ElementTree as ET
 
 from ..models import GARInstitution
-from ..gar import (get_gar_institution_list, delete_gar_subscription,  get_gar_certificate,
+from ..gar import (
+    get_gar_institution_list,
+    delete_gar_subscription,
+    get_gar_certificate,
     get_gar_headers,
-    get_gar_request_url)
+    get_gar_request_url,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -163,4 +167,4 @@ def handle_gar_subscription(sender, instance, **kwargs):
     else:
         response = _get_response_from_gar(instance, http_method="POST")
         if response.status_code != 200:
-            raise ValidationError(response.text) 
+            raise ValidationError(response.text)

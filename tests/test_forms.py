@@ -11,12 +11,14 @@ pytestmark = pytest.mark.django_db
 class TestGARInstitutionForm:
     def test_clean_uai_strips_and_uppercases(self):
         # GIVEN
-        form = GARInstitutionForm(data={
-            "uai": " abc ",
-            "institution_name": "Test Institution",
-            "ends_at": datetime.datetime.today(),
-            "subscription_id": "test-123"
-        })
+        form = GARInstitutionForm(
+            data={
+                "uai": " abc ",
+                "institution_name": "Test Institution",
+                "ends_at": datetime.datetime.today(),
+                "subscription_id": "test-123",
+            }
+        )
 
         # WHEN
         form.is_valid()  # This populates cleaned_data
@@ -34,7 +36,7 @@ class TestGARInstitutionForm:
             "request",
             return_value=response_from_gar(201, "dummy response message"),
         )
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
 
         # WHEN
         form = GARInstitutionForm(data=form_data().data)
@@ -55,8 +57,8 @@ class TestGARInstitutionForm:
             return_value=response_from_gar(400, "dummy error message"),
         )
         mocker.patch(
-            'django_gar.signals.handlers.handle_gar_subscription',
-            side_effect=ValidationError("GAR error")
+            "django_gar.signals.handlers.handle_gar_subscription",
+            side_effect=ValidationError("GAR error"),
         )
 
         # WHEN
@@ -80,7 +82,7 @@ class TestGARInstitutionForm:
                 response_from_gar(201, "OK"),
             ],
         )
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
 
         # WHEN
         form = GARInstitutionForm(data=form_data().data)
@@ -102,7 +104,7 @@ class TestGARInstitutionForm:
             "request",
             return_value=response_from_gar(200, "dummy response message"),
         )
-        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
+        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
 
         # WHEN
         form = GARInstitutionForm(instance=institution, data=data)
@@ -126,8 +128,8 @@ class TestGARInstitutionForm:
             return_value=response_from_gar(400, error_message),
         )
         mocker.patch(
-            'django_gar.signals.handlers.handle_gar_subscription',
-            side_effect=ValidationError("GAR error")
+            "django_gar.signals.handlers.handle_gar_subscription",
+            side_effect=ValidationError("GAR error"),
         )
 
         # WHEN
