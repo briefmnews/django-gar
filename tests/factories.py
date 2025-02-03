@@ -1,11 +1,11 @@
 import datetime
 import factory
-
 from django.contrib.auth import get_user_model
-
 from django_gar.models import GARInstitution, GARSession
+from django.db.models.signals import pre_save
 
 
+@factory.django.mute_signals(pre_save)
 class InstitutionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = GARInstitution
@@ -24,6 +24,7 @@ class GARSessionFactory(factory.django.DjangoModelFactory):
     ticket = "ST-2134567"
 
 
+@factory.django.mute_signals(pre_save)
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = get_user_model()

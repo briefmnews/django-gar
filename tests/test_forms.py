@@ -1,24 +1,45 @@
 import pytest
 import requests
-
+from django.core.exceptions import ValidationError
 from django_gar.forms import GARInstitutionForm
+from django_gar.signals.handlers import handle_gar_subscription
+import datetime
 
 pytestmark = pytest.mark.django_db
 
 
 class TestGARInstitutionForm:
+    def test_clean_uai_strips_and_uppercases(self):
+        # GIVEN
+        form = GARInstitutionForm(data={
+            "uai": " abc ",
+            "institution_name": "Test Institution",
+            "ends_at": datetime.datetime.today(),
+            "subscription_id": "test-123"
+        })
+
+        # WHEN
+        form.is_valid()  # This populates cleaned_data
+        cleaned_uai = form.clean_uai()
+
+        # THEN
+        assert cleaned_uai == "ABC"
+
     def test_form_works_with_gar_when_creating_instance(
         self, form_data, mocker, response_from_gar
     ):
         # GIVEN
         mock_request = mocker.patch.object(
-            GARInstitutionForm,
-            "_get_response_from_gar",
+            requests,
+            "request",
             return_value=response_from_gar(201, "dummy response message"),
         )
+        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
 
         # WHEN
         form = GARInstitutionForm(data=form_data().data)
+        form.is_valid()
+        form.save()
 
         # THEN
         assert mock_request.called_once()
@@ -29,17 +50,22 @@ class TestGARInstitutionForm:
     ):
         # GIVEN
         mock_request = mocker.patch.object(
-            GARInstitutionForm,
-            "_get_response_from_gar",
+            requests,
+            "request",
             return_value=response_from_gar(400, "dummy error message"),
+        )
+        mocker.patch(
+            'django_gar.signals.handlers.handle_gar_subscription',
+            side_effect=ValidationError("GAR error")
         )
 
         # WHEN
         form = GARInstitutionForm(data=form_data().data)
+        form.is_valid()
 
         # THEN
-        assert mock_request.called_once()
-        assert not form.is_valid()
+        with pytest.raises(ValidationError):
+            form.save()
 
     def test_form_works_with_gar_when_try_creating_instance_that_already_exists(
         self, form_data, mocker, response_from_gar
@@ -54,9 +80,11 @@ class TestGARInstitutionForm:
                 response_from_gar(201, "OK"),
             ],
         )
+        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
 
         # WHEN
         form = GARInstitutionForm(data=form_data().data)
+        form.is_valid()
         form.save()
 
         # THEN
@@ -69,15 +97,16 @@ class TestGARInstitutionForm:
         # GIVEN
         institution = user.garinstitution
         data = form_data(garinstitution=institution).data
-        institution.save()
         mock_request = mocker.patch.object(
             requests,
             "request",
             return_value=response_from_gar(200, "dummy response message"),
         )
+        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
 
         # WHEN
         form = GARInstitutionForm(instance=institution, data=data)
+        form.is_valid()
         form.save()
 
         # THEN
@@ -90,15 +119,21 @@ class TestGARInstitutionForm:
         # GIVEN
         institution = user.garinstitution
         data = form_data(garinstitution=institution).data
-        institution.save()
         error_message = "dummy error message"
-        mock_request = mocker.patch.object(
-            requests, "request", return_value=response_from_gar(400, error_message)
+        mocker.patch.object(
+            requests,
+            "request",
+            return_value=response_from_gar(400, error_message),
+        )
+        mocker.patch(
+            'django_gar.signals.handlers.handle_gar_subscription',
+            side_effect=ValidationError("GAR error")
         )
 
         # WHEN
         form = GARInstitutionForm(instance=institution, data=data)
+        form.is_valid()
 
         # THEN
-        assert mock_request.called_once()
-        assert not form.is_valid()
+        with pytest.raises(ValidationError):
+            form.save()

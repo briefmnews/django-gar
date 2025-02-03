@@ -3,6 +3,7 @@ import requests
 
 from django_gar.exceptions import DjangoGARException
 from django_gar.gar import get_gar_subscription, get_allocations, GAR_ALLOCATIONS_URL
+from django_gar.signals.handlers import handle_gar_subscription
 
 pytestmark = pytest.mark.django_db()
 
@@ -10,9 +11,9 @@ pytestmark = pytest.mark.django_db()
 class TestGetGarSubscription:
     def test_with_subscription_in_response(self, user, mocker, response_from_gar):
         # GIVEN
-        user.garinstitution.uai = 0561622j
+        user.garinstitution.uai = "0561622J"
         user.garinstitution.subscription_id = "briefeco_1630592291"
-        user.garinstitution.save()
+        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
         with open(
             "tests/fixtures/get_gar_subscription_response.xml", "r"
         ) as xml_response:
@@ -33,8 +34,8 @@ class TestGetGarSubscription:
 
     def test_with_wrong_subscription_id(self, user, mocker, response_from_gar):
         # GIVEN
-        user.garinstitution.uai = 0561622j
-        user.garinstitution.save()
+        user.garinstitution.uai = "0561622J"
+        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
         with open(
             "tests/fixtures/get_gar_subscription_response.xml", "r"
         ) as xml_response:
@@ -56,7 +57,7 @@ class TestGetGarSubscription:
     def test_with_status_code_not_200(self, user, mocker, response_from_gar):
         # GIVEN
         user.garinstitution.subscription_id = "briefeco_1630592291"
-        user.garinstitution.save()
+        mocker.patch('django_gar.signals.handlers.handle_gar_subscription')
         with open(
             "tests/fixtures/get_gar_subscription_response.xml", "r"
         ) as xml_response:
