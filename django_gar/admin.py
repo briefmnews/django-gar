@@ -47,7 +47,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
 
     @admin.display(description="Etat des affectations")
     def get_allocations(self, obj):
-        if not obj.uai:
+        if not obj.uai or not obj.subscription_id:
             return ""
 
         response = get_allocations(subscription_id=obj.subscription_id)
