@@ -13,10 +13,6 @@ User = get_user_model()
 
 
 class GARInstitutionForm(ModelForm):
-    subscription_id = forms.CharField(
-        widget=forms.TextInput(attrs={"readonly": "readonly"}), required=False
-    )
-
     class Meta:
         model = GARInstitution
         fields = (
@@ -25,7 +21,6 @@ class GARInstitutionForm(ModelForm):
             "ends_at",
             "user",
             "project_code",
-            "subscription_id",
         )
 
     def __init__(self, *args, **kwargs):
