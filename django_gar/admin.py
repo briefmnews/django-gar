@@ -19,7 +19,12 @@ class GARInstitutionAdmin(admin.ModelAdmin):
     raw_id_fields = ("user",)
     list_display = ("institution_name", "user", "uai", "ends_at")
     list_select_related = ("user",)
-    readonly_fields = ("id_ent", "subscription_id", "gar_subscription_response", "get_allocations")
+    readonly_fields = (
+        "id_ent",
+        "subscription_id",
+        "gar_subscription_response",
+        "get_allocations",
+    )
     ordering = ("institution_name",)
     search_fields = ("institution_name", "user__email", "uai", "project_code")
     list_filter = ["project_code"]
