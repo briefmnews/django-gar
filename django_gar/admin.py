@@ -62,7 +62,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
             obj.refresh_allocations_cache()
 
         if not obj.allocations_cache:
-            return "L'établissement n'a pas encore affecté la ressource.<br/>Les informations fournies par le webservice font l'objet d'un traitement asynchrone et sont par conséquent actualisées quotidiennement. Il peut être constaté une latence dans la prise en compte de changements en cas d'affectations / récupérations de licences au sein d'une même journée."
+            return "L'établissement n'a pas encore affecté la ressource. Les informations fournies par le webservice font l'objet d'un traitement asynchrone et sont par conséquent actualisées quotidiennement. Il peut être constaté une latence dans la prise en compte de changements en cas d'affectations / récupérations de licences au sein d'une même journée."
 
         allocations = ""
         for key, value in obj.allocations_cache.items():
