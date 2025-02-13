@@ -1,7 +1,13 @@
+import logging
+
 from django.db import models
-
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
+from .gar import get_allocations
+
+
+logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
@@ -17,9 +23,41 @@ class GARInstitution(models.Model):
     project_code = models.CharField(
         "Code de projet ressources", max_length=50, null=True, blank=True
     )
+    allocations_cache = models.JSONField("Affectations", null=True, blank=True)
+    allocations_cache_updated_at = models.DateTimeField(
+        "Dernière mise à jour du cache", null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.institution_name} ({self.uai})"
+
+    def refresh_allocations_cache(self):
+
+        if not self.subscription_id:
+            return
+
+        response = get_allocations(subscription_id=self.subscription_id)
+        if response.status_code == 200:
+            # Parse CSV data into a dictionary
+            csv_content = response.content.decode("utf-8")
+            lines = csv_content.splitlines()
+
+            if len(lines) > 1:  # If we have header and data
+                headers = lines[0].split(";")
+                values = lines[1].split(";")  # We take the first data line
+                self.allocations_cache = dict(zip(headers, values))
+            else:
+                self.allocations_cache = None
+
+            self.allocations_cache_updated_at = timezone.now()
+            self.save(
+                update_fields=["allocations_cache", "allocations_cache_updated_at"],
+            )
+            logger.info("Allocations cache updated successfully.")
+        else:
+            logger.error(
+                f"Failed to refresh allocations cache. Status code: {response.status_code}, Response: {response.text}"
+            )
 
 
 class GARSession(models.Model):

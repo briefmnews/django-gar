@@ -55,22 +55,16 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         if not obj.uai or not obj.subscription_id:
             return ""
 
-        response = get_allocations(subscription_id=obj.subscription_id)
-        decoded_response = response.content.decode("utf-8")
+        # Update cache if needed
+        if not obj.allocations_cache:
+            obj.refresh_allocations_cache()
 
-        if response.status_code == 200 and decoded_response:
-            lines = decoded_response.splitlines()
-            reader = csv.reader(lines, delimiter=";")
-            rows = list(reader)
-            headers = rows[0]
-            values = rows[1]
-            allocations = ""
-            for header, value in zip(headers, values):
-                allocations += f"{header} : {value}<br/>"
-        elif response.status_code == 200:
-            allocations = "L'établissement n'a pas encore affecté la ressource.<br/>Les informations fournies par le webservice font l’objet d’un traitement asynchrone et sont par conséquent actualisées quotidiennement. Il peut être constaté une latence dans la prise en compte de changements en cas d’affectations / récupérations de licences au sein d’une même journée."
-        else:
-            allocations = decoded_response.get("message")
+        if not obj.allocations_cache:
+            return "L'établissement n'a pas encore affecté la ressource.<br/>Les informations fournies par le webservice font l'objet d'un traitement asynchrone et sont par conséquent actualisées quotidiennement. Il peut être constaté une latence dans la prise en compte de changements en cas d'affectations / récupérations de licences au sein d'une même journée."
+
+        allocations = ""
+        for key, value in obj.allocations_cache.items():
+            allocations += f"{key} : {value}<br/>"
 
         return format_html(f"<code>{allocations}</code>")
 
