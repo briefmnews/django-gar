@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:listeEtablissements xmlns:ns="http://www.atosworldline.com/listEtablissement/v1.0/">
+    <ns:etablissement>
+        <ns:uai>0941295X</ns:uai>
+        <ns:idENT>123456</ns:idENT>
+    </ns:etablissement>
+</ns:listeEtablissements> 

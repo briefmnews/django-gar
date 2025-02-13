@@ -21,7 +21,7 @@ class TestGARInstitutionAdmin:
         # THEN
         assert response == ""
 
-    @pytest.mark.usefixtures("mock_get_gar_subscription")
+    @pytest.mark.usefixtures("mock_get_gar_subscription_empty")
     def test_gar_subscription_response_no_subscription(self, user):
         # GIVEN
         gar_institution = user.garinstitution
@@ -75,7 +75,11 @@ class TestGARInstitutionAdmin:
         # THEN
         assert "L'établissement n'a pas encore affecté la ressource" in response
 
-    @pytest.mark.usefixtures("mock_get_allocations_response")
+    @pytest.mark.usefixtures(
+        "mock_get_allocations_response",
+        "mock_gar_request_response",
+        "mock_gar_institution_list_response",
+    )
     def test_get_allocations_with_csv_data(self, user):
         # GIVEN
         gar_institution = user.garinstitution

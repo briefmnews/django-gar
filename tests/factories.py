@@ -14,6 +14,10 @@ class InstitutionFactory(factory.django.DjangoModelFactory):
     uai = "0561641E"
     ends_at = datetime.datetime.today()
     subscription_id = factory.Sequence(lambda n: "prefix_{0}".format(n))
+    allocations_cache = None
+    allocations_cache_updated_at = None
+    subscription_cache = None
+    subscription_cache_updated_at = None
 
 
 class GARSessionFactory(factory.django.DjangoModelFactory):

@@ -1,6 +1,7 @@
 import datetime
 import pytest
 import requests
+from bs4 import BeautifulSoup
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.middleware import SessionMiddleware
@@ -43,35 +44,79 @@ def mock_validate_invalid_ticket(mocker):
 
 @pytest.fixture
 def mock_get_allocations_response(mocker, response_from_gar):
-    file = "tests/fixtures/get_allocations_response"
-    with open(file, "r") as response:
-        return mocker.patch.object(
-            requests,
-            "request",
-            return_value=response_from_gar(
-                status_code=200, content=response.read().encode("utf-8")
-            ),
+    with open("tests/fixtures/get_allocations_response", "rb") as f:
+        return mocker.patch(
+            "django_gar.models.get_allocations",
+            return_value=response_from_gar(status_code=200, content=f.read()),
         )
 
 
 @pytest.fixture
 def mock_get_allocations_empty_response(mocker, response_from_gar):
+    """Mock for empty allocations response"""
+    mock = mocker.patch(
+        "django_gar.models.get_allocations",
+        return_value=response_from_gar(status_code=200, content=b"", message=""),
+    )
+    # Also mock the request for the subscription check
+    mocker.patch(
+        "requests.request",
+        return_value=response_from_gar(
+            status_code=200,
+            message="<abonnement><idAbonnement>test_id</idAbonnement><dateDebut>2024-03-05</dateDebut></abonnement>",
+        ),
+    )
+    return mock
+
+
+@pytest.fixture
+def mock_get_allocations_request(mocker, response_from_gar):
+    """Mock for requests.request in gar.py"""
     return mocker.patch.object(
         requests,
         "request",
-        return_value=response_from_gar(status_code=200, content=b""),
+        return_value=response_from_gar(status_code=200, content=b"test content"),
     )
 
 
 @pytest.fixture
 def mock_get_gar_subscription(mocker, response_from_gar):
-    file = "tests/fixtures/get_gar_subscription_response.xml"
-    with open(file, "r") as response:
-        return mocker.patch.object(
-            requests,
-            "request",
-            return_value=response_from_gar(200, message=response.read()),
-        )
+    """Mock for get_gar_subscription with valid data"""
+    subscription_xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <abonnement>
+        <idabonnement>briefme_1630592238</idabonnement>
+        <typeaffectation>INDIV</typeaffectation>
+        <debutvalidite>2024-01-01</debutvalidite>
+        <finvalidite>2024-12-31</finvalidite>
+    </abonnement>"""
+
+    def _mock_response(*args, **kwargs):
+        return BeautifulSoup(subscription_xml, "lxml")
+
+    mock = mocker.patch("django_gar.models.get_gar_subscription")
+    mock.side_effect = _mock_response
+
+    mocker.patch(
+        "requests.request",
+        return_value=response_from_gar(status_code=200, message=subscription_xml),
+    )
+
+    return mock
+
+
+@pytest.fixture
+def mock_get_gar_subscription_empty(mocker, response_from_gar):
+    """Mock for get_gar_subscription that returns None"""
+    mock = mocker.patch("django_gar.models.get_gar_subscription")
+    mock.return_value = None
+
+    # Also mock the underlying request
+    mocker.patch(
+        "requests.request",
+        return_value=response_from_gar(status_code=200, message=""),
+    )
+
+    return mock
 
 
 @pytest.fixture
@@ -251,3 +296,28 @@ class FormDataBuilder:
             }
 
         return form_data
+
+
+@pytest.fixture
+def mock_gar_request_response(mocker, response_from_gar):
+    return mocker.patch(
+        "requests.request",
+        return_value=response_from_gar(
+            status_code=200,
+            message="<abonnement><idAbonnement>briefme_0941295X_1709542737.2902117</idAbonnement><dateDebut>2024-03-05</dateDebut></abonnement>",
+        ),
+    )
+
+
+@pytest.fixture
+def mock_gar_institution_list_response(mocker, response_from_gar):
+    def _mock_response(*args, **kwargs):
+        with open("tests/fixtures/get_gar_institution_list_response.xml", "r") as f:
+            return response_from_gar(
+                status_code=200,
+                content=f.read().encode(),
+            )
+
+    mock = mocker.patch("django_gar.signals.handlers.get_gar_institution_list")
+    mock.side_effect = _mock_response
+    return mock

@@ -12,7 +12,6 @@ from django_gar.gar import (
     delete_gar_subscription,
     GAR_BASE_SUBSCRIPTION_URL,
 )
-from django_gar.signals.handlers import handle_gar_subscription
 
 pytestmark = pytest.mark.django_db()
 
@@ -174,25 +173,25 @@ class TestGetAllocations:
         )
 
     def test_get_allocations_with_subscription_id(
-        self, user, mock_get_allocations_response
+        self, user, mock_get_allocations_request
     ):
         # WHEN
         response = get_allocations(subscription_id=user.garinstitution.subscription_id)
 
         # THEN
-        mock_get_allocations_response.assert_called_once_with(
+        mock_get_allocations_request.assert_called_once_with(
             "GET",
             f"{GAR_ALLOCATIONS_URL}?idAbonnement={user.garinstitution.subscription_id}",
             cert=("", ""),
         )
         assert response.status_code == 200
 
-    def test_get_allocations_with_project_code(self, mock_get_allocations_response):
+    def test_get_allocations_with_project_code(self, mock_get_allocations_request):
         # WHEN
         response = get_allocations(project_code="DUMMY")
 
         # THEN
-        mock_get_allocations_response.assert_called_once_with(
+        mock_get_allocations_request.assert_called_once_with(
             "GET", f"{GAR_ALLOCATIONS_URL}?codeProjetRessource=DUMMY", cert=("", "")
         )
         assert response.status_code == 200
