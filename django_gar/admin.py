@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, reverse
 from django.utils.html import format_html
 
-from .gar import get_gar_subscription, get_allocations
+from .gar import get_allocations
 from .forms import GARInstitutionForm
 from .models import GARInstitution
 
@@ -36,17 +36,19 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         if not obj.uai:
             return ""
 
-        gar_subscription = get_gar_subscription(obj.uai, obj.subscription_id)
+        # Update cache if needed
+        if not obj.subscription_cache:
+            obj.refresh_subscription_cache()
 
-        if not gar_subscription:
+        if not obj.subscription_cache:
             return (
                 "L'abonnement n'existe pas dans le GAR. "
                 "Vous pouvez le supprimer et en créer un nouveau."
             )
 
         response = ""
-        for element in gar_subscription.find_all():
-            response += f"{element.name} : {element.text}<br/>"
+        for key, value in obj.subscription_cache.items():
+            response += f"{key} : {value}<br/>"
 
         return format_html(f"<code>{response}</code>")
 

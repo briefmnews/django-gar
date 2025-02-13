@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from .gar import get_allocations
+from .gar import get_allocations, get_gar_subscription
 
 
 logger = logging.getLogger(__name__)
@@ -27,12 +27,15 @@ class GARInstitution(models.Model):
     allocations_cache_updated_at = models.DateTimeField(
         "Dernière mise à jour du cache", null=True, blank=True
     )
+    subscription_cache = models.JSONField("Abonnement", null=True, blank=True)
+    subscription_cache_updated_at = models.DateTimeField(
+        "Dernière mise à jour du cache abonnement", null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.institution_name} ({self.uai})"
 
     def refresh_allocations_cache(self):
-
         if not self.subscription_id:
             return
 
@@ -58,6 +61,23 @@ class GARInstitution(models.Model):
             logger.error(
                 f"Failed to refresh allocations cache. Status code: {response.status_code}, Response: {response.text}"
             )
+
+    def refresh_subscription_cache(self):
+        if not self.uai or not self.subscription_id:
+            return
+
+        subscription = get_gar_subscription(self.uai, self.subscription_id)
+        if subscription:
+            self.subscription_cache = {
+                element.name: element.text for element in subscription.find_all()
+            }
+            self.subscription_cache_updated_at = timezone.now()
+            self.save(
+                update_fields=["subscription_cache", "subscription_cache_updated_at"]
+            )
+            logger.info("Subscription cache updated successfully.")
+        else:
+            logger.info("No subscription found in GAR.")
 
 
 class GARSession(models.Model):
