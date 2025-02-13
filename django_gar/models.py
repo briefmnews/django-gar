@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from .gar import get_allocations, get_gar_subscription
+from .gar import get_allocations, get_gar_subscription, get_institution_id_ent
 
 
 logger = logging.getLogger(__name__)
@@ -77,7 +77,20 @@ class GARInstitution(models.Model):
             )
             logger.info("Subscription cache updated successfully.")
         else:
-            logger.info("No subscription found in GAR.")
+            logger.error("No subscription found in GAR.")
+
+    def refresh_id_ent(self):
+        """Refresh the id_ent field by fetching it from GAR institution list"""
+        if not self.uai:
+            return
+
+        id_ent = get_institution_id_ent(self.uai)
+        if id_ent:
+            self.id_ent = id_ent
+            self.save(update_fields=["id_ent"])
+            logger.info("Institution id_ent updated successfully.")
+        else:
+            logger.warning(f"No institution found with UAI {self.uai} in GAR.")
 
 
 class GARSession(models.Model):
