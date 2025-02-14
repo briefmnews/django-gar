@@ -108,6 +108,23 @@ Use cases:
 - Manual cache refresh
 - Troubleshooting GAR integration
 
+### refresh_gar_idents
+Updates ENT IDs for all institutions from GAR.
+
+```shell
+python manage.py refresh_gar_idents
+```
+
+The command:
+- Fetches the latest institution list from GAR
+- Updates the ENT IDs (id_ent) for all matching institutions
+- Performs updates in bulk for better performance
+
+Use cases:
+- Initial setup of new institutions
+- Bulk update of ENT IDs
+- Synchronizing with GAR institution list
+
 ## Testing
 Run tests with pytest:
 ```shell
