@@ -77,7 +77,7 @@ class GARInstitution(models.Model):
             )
             logger.info("Subscription cache updated successfully.")
         else:
-            logger.error("No subscription found in GAR.")
+            logger.error(f"No subscription found in GAR for {self.uai}.")
 
 
 class GARSession(models.Model):
