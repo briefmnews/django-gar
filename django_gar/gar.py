@@ -123,19 +123,3 @@ def get_allocations(subscription_id=None, project_code=None):
         f"{GAR_ALLOCATIONS_URL}?{urlencode(params)}",
         cert=get_gar_certificate(),
     )
-
-
-def get_institution_id_ent(uai):
-    """Get the id_ent for a given UAI from GAR institution list"""
-    response = get_gar_institution_list()
-    if response.status_code != 200:
-        logger.error(
-            f"Failed to get institution list. Status code: {response.status_code}"
-        )
-        return None
-
-    soup = BeautifulSoup(response.content, "lxml")
-    for etablissement in soup.find_all("ns:etablissement"):
-        if etablissement.find("ns:uai").text == uai:
-            return etablissement.find("ns:ident").text
-    return None
