@@ -11,6 +11,7 @@ class TestRefreshGarCachesCommand:
     @pytest.mark.usefixtures(
         "mock_get_allocations_response",
         "mock_gar_request_response",
+        "mock_gar_institution_list_response",
     )
     def test_refresh_caches_for_all_institutions(self, user, capsys):
         # GIVEN
@@ -36,6 +37,8 @@ class TestRefreshGarCachesCommand:
     @pytest.mark.usefixtures(
         "mock_get_allocations_response",
         "mock_gar_request_response",
+        "mock_gar_institution_list_response",
+        "mock_get_gar_subscription",
     )
     def test_refresh_caches_for_specific_uai(self, user, capsys):
         # GIVEN
