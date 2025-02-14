@@ -5,7 +5,16 @@
 [![codecov](https://codecov.io/gh/briefmnews/django-gar/branch/master/graph/badge.svg)](https://codecov.io/gh/briefmnews/django-gar)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)  
-Handle CAS login for the french Gestionnaire d'Accès au Ressources (GAR).
+
+Django app to handle CAS authentication and resource management for the french Gestionnaire d'Accès aux Ressources (GAR).
+
+## Features
+- CAS authentication with GAR
+- Institution management with subscription tracking
+- Allocation monitoring for resources
+- Caching of GAR data (allocations, subscriptions, ENT IDs)
+- Admin interface for institution management
+- CSV export of allocation reports
 
 ## Installation
 Install with [pip](https://pip.pypa.io/en/stable/):
@@ -14,10 +23,10 @@ pip install django-gar
 ```
 
 ## Setup
-In order to make `django-gar` works, you'll need to follow the steps below.
+In order to make `django-gar` work, you'll need to follow these steps:
 
-### Settings
-First you need to add the following configuration to your settings:
+### 1. Settings
+Add the required configuration to your settings:
 ```python
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -46,62 +55,70 @@ AUTHENTICATION_BACKENDS = (
 )
 ```
 
-### Migrations
-Next, you need to run the migrations in order to update your database schema.
+### 2. Migrations
+Run migrations to create the necessary database tables:
 ```shell
 python manage.py migrate
 ```
 
-### Mandatory settings
-Here is the list of all the mandatory settings:
+### 3. Required Settings
+Configure these mandatory settings:
 ```python
-GAR_BASE_URL
-GAR_BASE_SUBSCRIPTION_URL
-GAR_SUBSCRIPTION_PREFIX
-GAR_DISTRIBUTOR_ID
-GAR_CERTIFICATE_PATH
-GAR_KEY_PATH
-GAR_RESOURCES_ID
-GAR_ORGANIZATION_NAME
+# GAR Connection Settings
+GAR_BASE_URL = "https://idp-auth.partenaire.test-gar.education.fr/"
+GAR_BASE_SUBSCRIPTION_URL = "https://abonnement.partenaire.test-gar.education.fr/"
+GAR_SUBSCRIPTION_PREFIX = "your_prefix"
+GAR_DISTRIBUTOR_ID = "your_distributor_id"
+
+# Authentication Certificates
+GAR_CERTIFICATE_PATH = "/path/to/your/cert.pem"
+GAR_KEY_PATH = "/path/to/your/key.pem"
+
+# Resource Configuration
+GAR_RESOURCES_ID = "your_resource_id"
+GAR_ORGANIZATION_NAME = "Your Organization"
 ```
 
-The optional settings with their default values:
+Optional settings with their defaults:
 ```python
-GAR_ACTIVE_USER_REDIRECT (default: "/")
-GAR_INACTIVE_USER_REDIRECT (default: "/")
-GAR_QUERY_STRING_TRIGGER (default: "sso_id")
+GAR_ACTIVE_USER_REDIRECT = "/"  # Redirect after successful login
+GAR_INACTIVE_USER_REDIRECT = "/"  # Redirect for inactive users
+GAR_QUERY_STRING_TRIGGER = "sso_id"  # URL parameter for SSO
 ```
 
 ## Management Commands
 
 ### refresh_gar_caches
-Refresh GAR subscription, allocations and ID ENT caches for institutions.
+Updates GAR data caches for institutions.
 
 ```shell
-# Refresh caches for all institutions
+# Refresh all institutions
 python manage.py refresh_gar_caches
 
-# Refresh caches for a specific institution
+# Refresh specific institution
 python manage.py refresh_gar_caches --uai=0123456A
 ```
 
-The command will:
-- Update the allocations cache with the latest data from GAR
-- Update the subscription cache with the latest subscription information
-- Update the institution's ID ENT from GAR institution list
+The command updates:
+- Resource allocation data
+- Subscription information
+- Institution ENT IDs from GAR institution list
 
-This is useful for:
-- Initializing caches for new institutions
-- Manually refreshing data when needed
-- Troubleshooting allocation or subscription issues
-- Updating institution ENT IDs after GAR changes
+Use cases:
+- Initial setup of new institutions
+- Manual cache refresh
+- Troubleshooting GAR integration
+- Updating ENT IDs after GAR changes
 
-## Tests
-Testing is managed by `pytest`. Required package for testing can be installed with:
+## Testing
+Run tests with pytest:
 ```shell
+# Install test dependencies
 pip install -r test_requirements.txt
-```
-To run testing locally:
-```shell
+
+# Run tests
 pytest
 ```
+
+## Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
