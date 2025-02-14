@@ -139,11 +139,11 @@ def handle_gar_subscription(sender, instance, **kwargs):
     if not instance.pk:
         response = _get_response_from_gar(instance, http_method="PUT")
         if response.status_code not in [201, 200]:
-            raise ValidationError(response.text)
+            logger.error(response.text)
     else:
         response = _get_response_from_gar(instance, http_method="POST")
         if response.status_code != 200:
-            raise ValidationError(response.text)
+            logger.error(response.text)
 
 
 @receiver(pre_save, sender=GARInstitution, dispatch_uid="get_id_ent")
