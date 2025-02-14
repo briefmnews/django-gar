@@ -18,19 +18,3 @@ class TestGARInstitutionModel(object):
         assert str(institution) == "{} ({})".format(
             institution.institution_name, institution.uai
         )
-
-    @pytest.mark.usefixtures(
-        "mock_gar_institution_list_response",
-        "mock_gar_request_response",
-    )
-    def test_refresh_id_ent_updates_field(self, user):
-        # GIVEN
-        institution = user.garinstitution
-        institution.uai = "0941295X"
-        institution.id_ent = None
-
-        # WHEN
-        institution.refresh_id_ent()
-
-        # THEN
-        assert institution.id_ent == "123456"

@@ -1,8 +1,6 @@
 import pytest
-from io import StringIO
 from django.core.management import call_command
 from django_gar.models import GARInstitution
-from bs4 import BeautifulSoup
 
 pytestmark = pytest.mark.django_db
 
@@ -88,3 +86,33 @@ class TestRefreshGarCachesCommand:
         institution.refresh_from_db()
         assert institution.allocations_cache["cumulAffectationEnseignant"] == "226"
         assert "abonnement" in institution.subscription_cache
+
+
+class TestRefreshGarIdentsCommand:
+    @pytest.mark.usefixtures(
+        "mock_gar_institution_list_response", "mock_gar_request_response"
+    )
+    def test_refresh_idents_updates_institutions(self, user):
+        # GIVEN
+        institution = user.garinstitution
+        institution.uai = "0941295X"
+        institution.id_ent = None
+        institution.save()
+
+        # Create another institution
+        second_user = user.__class__.objects.create(username="test2")
+        second_institution = GARInstitution.objects.create(
+            user=second_user,
+            uai="0123456A",  # This one won't be found in GAR
+            institution_name="Test Institution 2",
+            subscription_id="test_id_2",
+        )
+
+        # WHEN
+        call_command("refresh_gar_idents")
+
+        # THEN
+        institution.refresh_from_db()
+        second_institution.refresh_from_db()
+        assert institution.id_ent == "123456"
+        assert second_institution.id_ent is None
