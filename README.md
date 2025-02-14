@@ -72,6 +72,30 @@ GAR_INACTIVE_USER_REDIRECT (default: "/")
 GAR_QUERY_STRING_TRIGGER (default: "sso_id")
 ```
 
+## Management Commands
+
+### refresh_gar_caches
+Refresh GAR subscription, allocations and ID ENT caches for institutions.
+
+```shell
+# Refresh caches for all institutions
+python manage.py refresh_gar_caches
+
+# Refresh caches for a specific institution
+python manage.py refresh_gar_caches --uai=0123456A
+```
+
+The command will:
+- Update the allocations cache with the latest data from GAR
+- Update the subscription cache with the latest subscription information
+- Update the institution's ID ENT from GAR institution list
+
+This is useful for:
+- Initializing caches for new institutions
+- Manually refreshing data when needed
+- Troubleshooting allocation or subscription issues
+- Updating institution ENT IDs after GAR changes
+
 ## Tests
 Testing is managed by `pytest`. Required package for testing can be installed with:
 ```shell
