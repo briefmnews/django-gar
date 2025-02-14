@@ -31,6 +31,5 @@ class Command(BaseCommand):
 
             institution.refresh_subscription_cache()
             institution.refresh_allocations_cache()
-            institution.refresh_id_ent()
 
         self.stdout.write(self.style.SUCCESS("Done!"))

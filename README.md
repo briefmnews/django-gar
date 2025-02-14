@@ -102,13 +102,11 @@ python manage.py refresh_gar_caches --uai=0123456A
 The command updates:
 - Resource allocation data
 - Subscription information
-- Institution ENT IDs from GAR institution list
 
 Use cases:
 - Initial setup of new institutions
 - Manual cache refresh
 - Troubleshooting GAR integration
-- Updating ENT IDs after GAR changes
 
 ## Testing
 Run tests with pytest:
