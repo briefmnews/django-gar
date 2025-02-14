@@ -3,7 +3,7 @@ from django_gar.models import GARInstitution
 
 
 class Command(BaseCommand):
-    help = "Refresh GAR subscription and allocations caches"
+    help = "Refresh GAR subscription, allocations and ID ENT caches for institutions"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -31,5 +31,6 @@ class Command(BaseCommand):
 
             institution.refresh_subscription_cache()
             institution.refresh_allocations_cache()
+            institution.refresh_id_ent()
 
         self.stdout.write(self.style.SUCCESS("Done!"))
