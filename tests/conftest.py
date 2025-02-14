@@ -309,3 +309,15 @@ def mock_gar_institution_list_response(mocker, response_from_gar):
     mock = mocker.patch("django_gar.gar.get_gar_institution_list")
     mock.return_value = _mock_response()
     return mock
+
+
+@pytest.fixture(autouse=True)
+def mock_get_gar_institution_list(mocker, response_from_gar):
+    file = "tests/fixtures/institution_list.xml"
+    with open(file, "r") as xml_response:
+        return mocker.patch(
+            "django_gar.signals.handlers.get_gar_institution_list",
+            return_value=response_from_gar(
+                status_code=200, content=xml_response.read()
+            ),
+        )

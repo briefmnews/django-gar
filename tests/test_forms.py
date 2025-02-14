@@ -36,7 +36,6 @@ class TestGARInstitutionForm:
             "request",
             return_value=response_from_gar(201, "dummy response message"),
         )
-        mocker.patch("django_gar.signals.handlers.handle_gar_subscription")
 
         # WHEN
         form = GARInstitutionForm(data=form_data().data)

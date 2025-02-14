@@ -1,7 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ns:listeEtablissements xmlns:ns="http://www.atosworldline.com/listEtablissement/v1.0/">
-    <ns:etablissement>
-        <ns:uai>0941295X</ns:uai>
-        <ns:idENT>123456</ns:idENT>
-    </ns:etablissement>
-</ns:listeEtablissements> 
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<listEtablissement xmlns="http://www.atosworldline.com/listEtablissement/v1.0/">
+    <etablissement>
+        <uai>0941295X</uai>
+        <nature_uai>320</nature_uai>
+        <nature_uai_libe>Lycée professionnel</nature_uai_libe>
+        <type_uai>LP</type_uai>
+        <type_uai_libe>Lycées professionnels</type_uai_libe>
+        <commune>01004</commune>
+        <commune_libe>Ambérieu-en-Bugey</commune_libe>
+        <academie>10</academie>
+        <academie_libe>Lyon</academie_libe>
+        <departement_insee_3>001</departement_insee_3>
+        <departement_insee_3_libe>Ain</departement_insee_3_libe>
+        <appellation_officielle>Lycée professionnel Alexandre Bérard - Lycée des métiers de l'énergie et de l'habitat</appellation_officielle>
+        <patronyme_uai>ALEXANDRE BERARD</patronyme_uai>
+        <code_postal_uai>01500</code_postal_uai>
+        <localite_acheminement_uai>AMBERIEU EN BUGEY</localite_acheminement_uai>
+        <idENT>123456</idENT>
+    </etablissement>
+</listEtablissement>
