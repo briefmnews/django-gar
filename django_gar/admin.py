@@ -87,68 +87,45 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         return allocations_report_url + urlpatterns
 
     def allocations_report(self, request):
-        project_code = request.GET.get("project_code")
-
-        if not project_code:
-            messages.success(
-                request,
-                "Impossible de télécharger le rapport d’affectations, le code projet ressource est introuvable",
-            )
-            return redirect(
-                reverse(
-                    "admin:{}_{}_changelist".format(
-                        self.model._meta.app_label, self.model._meta.model_name
-                    )
-                )
-            )
-
-        allocations_response = get_allocations(project_code=project_code)
-        data = allocations_response.content.decode("utf-8")
+        """Generate a CSV report of allocations for all institutions"""
+        # Headers for the CSV
+        headers = [
+            "InstitutionName",
+            "UAI",
+            "idAbonnement",
+            "codeProjetRessource",
+            "idRessource",
+            "cumulAffectationEleve",
+            "cumulAffectationEnseignant",
+            "cumulAffectationDocumentaliste",
+            "cumulAffectationAutrePersonnel",
+        ]
 
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = (
-            f'attachment; filename="rapport_affectations_{project_code}.csv"'
+            'attachment; filename="rapport_affectations.csv"'
         )
-
         writer = csv.writer(response)
-        rows = [line.split(";") for line in data.splitlines()]
+        writer.writerow(headers)
 
-        filtered_rows = [["InstitutionName"] + rows[0]]
+        # Get all institutions
+        institutions = self.model.objects.all()
 
-        gar_institutions = self.model.objects.filter(project_code=project_code)
-
-        filtered_rows += [
-            [
-                (
-                    gar_institutions.get(uai=row[0]).institution_name
-                    if gar_institutions.filter(uai=row[0]).exists()
-                    else "-"
-                )
-            ]
-            + row
-            for row in rows[1:]
-            if settings.GAR_RESOURCES_ID in row
-        ]
-
-        # Add institutions with no affectations
-        existing_uais = {row[1] for row in filtered_rows[1:]}
-
-        filtered_rows += [
-            [
-                gar_institution.institution_name,
-                gar_institution.uai,
-                gar_institution.subscription_id,
-                project_code,
-                settings.GAR_RESOURCES_ID,
-                0,
-                0,
-                0,
-                0,
-            ]
-            for gar_institution in gar_institutions
-            if gar_institution.uai not in existing_uais
-        ]
-
-        writer.writerows(filtered_rows)
+        # Write data for each institution
+        for institution in institutions:
+            allocations = institution.allocations_cache or {}
+            writer.writerow(
+                [
+                    institution.institution_name,
+                    institution.uai,
+                    institution.subscription_id,
+                    institution.project_code,
+                    settings.GAR_RESOURCES_ID,
+                    allocations.get("cumulAffectationEleve", "0"),
+                    allocations.get("cumulAffectationEnseignant", "0"),
+                    allocations.get("cumulAffectationDocumentaliste", "0"),
+                    allocations.get("cumulAffectationAutrePersonnel", "0"),
+                ]
+            )
 
         return response

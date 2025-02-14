@@ -2,11 +2,9 @@
 {% load i18n %}
 {% block object-tools-items %}
     <li>
-        {% if request.GET.project_code %}
-        <a href="{% url 'admin:django_gar_garinstitution_generate_allocations_report' %}?project_code={{ request.GET.project_code }}">
-            Rapport d’affectations pour le projet {{ request.GET.project_code }}
+        <a href="{% url 'admin:django_gar_garinstitution_generate_allocations_report' %}">
+            Rapport d’affectations
         </a>
-        {% endif %}
     </li>
     {{ block.super }}
 {% endblock %}
