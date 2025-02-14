@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
+from defusedxml import ElementTree as ET
 
-from bs4 import BeautifulSoup
 from django_gar.models import GARInstitution
 from django_gar.gar import get_gar_institution_list
 
@@ -21,11 +21,11 @@ class Command(BaseCommand):
             return
 
         # Parse XML once
-        soup = BeautifulSoup(response.content, "lxml")
+        root = ET.fromstring(response.content)
         namespace = {"ns": "http://www.atosworldline.com/listEtablissement/v1.0/"}
         gar_institutions = {
             etab.find("ns:uai", namespace).text: etab.find("ns:idENT", namespace).text
-            for etab in soup.find_all("ns:etablissement", namespace)
+            for etab in root.findall("ns:etablissement", namespace)
         }
 
         updates = []
