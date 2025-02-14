@@ -22,12 +22,12 @@ class Command(BaseCommand):
 
         # Parse XML once
         soup = BeautifulSoup(response.content, "lxml")
+        namespace = {"ns": "http://www.atosworldline.com/listEtablissement/v1.0/"}
         gar_institutions = {
-            etab.find("ns:uai").text: etab.find("ns:ident").text
-            for etab in soup.find_all("ns:etablissement")
+            etab.find("ns:uai", namespace).text: etab.find("ns:idENT", namespace).text
+            for etab in soup.find_all("ns:etablissement", namespace)
         }
 
-        # Update institutions in bulk
         updates = []
         for institution in institutions:
             if institution.uai in gar_institutions:
