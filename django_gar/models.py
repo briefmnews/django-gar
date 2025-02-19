@@ -67,17 +67,22 @@ class GARInstitution(models.Model):
             return
 
         subscription = get_gar_subscription(self.uai, self.subscription_id)
+
+        self.subscription_cache_updated_at = timezone.now()
+
         if subscription:
             self.subscription_cache = {
                 element.name: element.text for element in subscription.find_all()
             }
-            self.subscription_cache_updated_at = timezone.now()
             self.save(
                 update_fields=["subscription_cache", "subscription_cache_updated_at"]
             )
             logger.info("Subscription cache updated successfully.")
         else:
+            self.subscription_cache = None
             logger.error(f"No subscription found in GAR for {self.uai}.")
+
+        self.save(update_fields=["subscription_cache", "subscription_cache_updated_at"])
 
 
 class GARSession(models.Model):
