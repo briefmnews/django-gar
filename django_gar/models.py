@@ -40,6 +40,9 @@ class GARInstitution(models.Model):
             return
 
         response = get_allocations(subscription_id=self.subscription_id)
+
+        self.allocations_cache_updated_at = timezone.now()
+
         if response.status_code == 200:
             # Parse CSV data into a dictionary
             csv_content = response.content.decode("utf-8")
@@ -52,15 +55,16 @@ class GARInstitution(models.Model):
             else:
                 self.allocations_cache = None
 
-            self.allocations_cache_updated_at = timezone.now()
-            self.save(
-                update_fields=["allocations_cache", "allocations_cache_updated_at"],
-            )
             logger.info("Allocations cache updated successfully.")
         else:
+            self.allocations_cache = None
             logger.error(
                 f"Failed to refresh allocations cache. Status code: {response.status_code}, Response: {response.text}"
             )
+
+        self.save(
+            update_fields=["allocations_cache", "allocations_cache_updated_at"],
+        )
 
     def refresh_subscription_cache(self):
         if not self.uai or not self.subscription_id:
