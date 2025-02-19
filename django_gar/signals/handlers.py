@@ -78,7 +78,7 @@ def _get_gar_data_to_send(instance, http_method=None):
        <typeIdRessource>ark</typeIdRessource>
        <libelleRessource>{organization_name}</libelleRessource>
        <debutValidite>{start_date}</debutValidite>
-       <finValidite>{end_date}T00:00:00</finValidite>
+       <finValidite>{end_date}T23:59:59</finValidite>
        <uaiEtab>{uai}</uaiEtab>
        <categorieAffectation>transferable</categorieAffectation>
        <typeAffectation>INDIV</typeAffectation>
