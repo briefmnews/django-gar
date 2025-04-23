@@ -129,9 +129,14 @@ def _get_response_from_gar(instance, http_method):
     return response
 
 
-@receiver(pre_save, sender=GARInstitution)
+@receiver(pre_save, sender=GARInstitution, dispatch_uid="handle_gar_subscription")
 def handle_gar_subscription(sender, instance, **kwargs):
     """Handle GAR subscription creation/update before saving the instance"""
+    # Skip if we're only updating cache fields
+    if kwargs.get('update_fields') == {'allocations_cache', 'allocations_cache_updated_at'} or \
+       kwargs.get('update_fields') == {'subscription_cache', 'subscription_cache_updated_at'}:
+        return
+
     if not instance.subscription_id:
         instance.subscription_id = f"{GAR_SUBSCRIPTION_PREFIX}{int(time.time())}"
 
