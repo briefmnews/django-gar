@@ -135,6 +135,7 @@ def handle_gar_subscription(sender, instance, **kwargs):
     # Skip if we're only updating cache fields
     if kwargs.get('update_fields') == {'allocations_cache', 'allocations_cache_updated_at'} or \
        kwargs.get('update_fields') == {'subscription_cache', 'subscription_cache_updated_at'}:
+        logger.info(f"GAR subscription caches for {instance.uai} updated")
         return
 
     if not instance.subscription_id:
@@ -149,6 +150,8 @@ def handle_gar_subscription(sender, instance, **kwargs):
         response = _get_response_from_gar(instance, http_method="POST")
         if response.status_code != 200:
             logger.error(response.text)
+
+    logger.info(f"GAR subscription {instance.uai} updated with status code {response.status_code}")
 
 
 @receiver(pre_save, sender=GARInstitution, dispatch_uid="get_id_ent")
