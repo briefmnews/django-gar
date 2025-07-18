@@ -93,6 +93,13 @@ class GARMiddleware:
                 uai.text.upper()
                 for uai in auth_success_element.findall(uai_element, ns)
             ]
+
+            if auth_success_element.find("cas:PRO", ns):
+                request.session["gar_profile"] = auth_success_element.find("cas:PRO", ns).text
+
+            if auth_success_element.find("cas:IDO", ns):
+                request.session["gar_ido"] = auth_success_element.find("cas:IDO", ns).text
+
             return uai_numbers
 
         except (AttributeError, ParseError):
