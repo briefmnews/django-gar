@@ -81,7 +81,7 @@ def _get_gar_data_to_send(instance, http_method=None):
        <finValidite>{end_date}T23:59:59</finValidite>
        <uaiEtab>{uai}</uaiEtab>
        <categorieAffectation>transferable</categorieAffectation>
-       <typeAffectation>INDIV</typeAffectation>
+       <typeAffectation>ETABL</typeAffectation>
        <nbLicenceGlobale>ILLIMITE</nbLicenceGlobale>
        <publicCible>ELEVE</publicCible>
        <publicCible>ENSEIGNANT</publicCible>
