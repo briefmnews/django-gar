@@ -75,12 +75,19 @@ class GARInstitution(models.Model):
         self.subscription_cache_updated_at = timezone.now()
 
         if subscription:
-            self.subscription_cache = {
-                element.name: element.text for element in subscription.find_all()
-            }
-            self.save(
-                update_fields=["subscription_cache", "subscription_cache_updated_at"]
-            )
+            # Create a dictionary to store all values
+            cache = {}
+            for element in subscription.find_all():
+                if element.text.strip():  # Only store non-empty text
+                    if element.name in cache:
+                        # If we already have this key and it's not a list, convert to list
+                        if not isinstance(cache[element.name], list):
+                            cache[element.name] = [cache[element.name]]
+                        cache[element.name].append(element.text)
+                    else:
+                        cache[element.name] = element.text
+            
+            self.subscription_cache = cache
             logger.info("Subscription cache updated successfully.")
         else:
             self.subscription_cache = None

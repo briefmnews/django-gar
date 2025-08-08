@@ -46,9 +46,23 @@ class GARInstitutionAdmin(admin.ModelAdmin):
                 "Vous pouvez le supprimer et en créer un nouveau."
             )
 
-        response = ""
+        # Group values by key in case there are multiple values
+        grouped_values = {}
         for key, value in obj.subscription_cache.items():
-            response += f"{key} : {value}<br/>"
+            if key not in grouped_values:
+                grouped_values[key] = []
+            grouped_values[key].append(value)
+
+        response = ""
+        for key, values in grouped_values.items():
+            # If there's only one value, display it normally
+            if len(values) == 1:
+                response += f"{key} : {values[0]}<br/>"
+            # If there are multiple values, display them as a list
+            else:
+                response += f"{key} :<br/>"
+                for value in values:
+                    response += f"&nbsp;&nbsp;&nbsp;&nbsp;- {value}<br/>"
 
         return format_html(f"<code>{response}</code>")
 
