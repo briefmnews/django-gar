@@ -86,7 +86,7 @@ class GARInstitution(models.Model):
                         cache[element.name].append(element.text)
                     else:
                         cache[element.name] = element.text
-            
+
             self.subscription_cache = cache
             logger.info("Subscription cache updated successfully.")
         else:

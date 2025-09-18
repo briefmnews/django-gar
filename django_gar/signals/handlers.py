@@ -133,8 +133,13 @@ def _get_response_from_gar(instance, http_method):
 def handle_gar_subscription(sender, instance, **kwargs):
     """Handle GAR subscription creation/update before saving the instance"""
     # Skip if we're only updating cache fields
-    if kwargs.get('update_fields') == {'allocations_cache', 'allocations_cache_updated_at'} or \
-       kwargs.get('update_fields') == {'subscription_cache', 'subscription_cache_updated_at'}:
+    if kwargs.get("update_fields") == {
+        "allocations_cache",
+        "allocations_cache_updated_at",
+    } or kwargs.get("update_fields") == {
+        "subscription_cache",
+        "subscription_cache_updated_at",
+    }:
         logger.info(f"GAR subscription caches for {instance.uai} updated")
         return
 
@@ -151,7 +156,9 @@ def handle_gar_subscription(sender, instance, **kwargs):
         if response.status_code != 200:
             logger.error(response.text)
 
-    logger.info(f"GAR subscription {instance.uai} updated with status code {response.status_code}")
+    logger.info(
+        f"GAR subscription {instance.uai} updated with status code {response.status_code}"
+    )
 
 
 @receiver(pre_save, sender=GARInstitution, dispatch_uid="get_id_ent")

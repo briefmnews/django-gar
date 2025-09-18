@@ -5,10 +5,12 @@ pytestmark = pytest.mark.django_db
 
 
 class TestGARInstitutionSignals:
-    def test_gar_api_not_called_for_cache_updates(self, user, mock_gar_request_response):
+    def test_gar_api_not_called_for_cache_updates(
+        self, user, mock_gar_request_response
+    ):
         # GIVEN
         institution = user.garinstitution
-        
+
         # WHEN
         institution.allocations_cache = {"some": "data"}
         institution.allocations_cache_updated_at = timezone.now()
