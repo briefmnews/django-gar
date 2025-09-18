@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm
+import unicodedata
 
 from .models import GARInstitution
 
@@ -32,3 +33,12 @@ class GARInstitutionForm(ModelForm):
 
     def clean_uai(self):
         return self.cleaned_data.get("uai").upper().strip()
+
+    def clean_institution_name(self):
+        institution_name = self.cleaned_data.get("institution_name").upper()
+
+        return "".join(
+            c
+            for c in unicodedata.normalize("NFD", institution_name)
+            if unicodedata.category(c) != "Mn"
+        )
