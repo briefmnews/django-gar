@@ -17,7 +17,14 @@ GAR_RESOURCES_ID = getattr(settings, "GAR_RESOURCES_ID", "")
 @admin.register(GARInstitution)
 class GARInstitutionAdmin(admin.ModelAdmin):
     raw_id_fields = ("user",)
-    list_display = ("institution_name", "user", "uai", "ends_at")
+    list_display = (
+        "institution_name",
+        "user",
+        "uai",
+        "ends_at",
+        "student_allocation",
+        "teacher_allocation",
+    )
     list_select_related = ("user",)
     readonly_fields = (
         "id_ent",
@@ -83,6 +90,31 @@ class GARInstitutionAdmin(admin.ModelAdmin):
             allocations += f"{key} : {value}<br/>"
 
         return format_html(f"<code>{allocations}</code>")
+
+    @admin.display(
+        description="Affectations élève",
+    )
+    def student_allocation(self, obj):
+        if not obj.allocations_cache:
+            return "-"
+        value = obj.allocations_cache.get("cumulAffectationEleve", "")
+        try:
+            return int(value) if value else 0
+        except (ValueError, TypeError):
+            return value or "-"
+
+    @admin.display(
+        description="Affectations enseignant",
+    )
+    def teacher_allocation(self, obj):
+        if not obj.allocations_cache:
+            return "-"
+        value = obj.allocations_cache.get("cumulAffectationEnseignant", "")
+        try:
+            return int(value) if value else 0
+        except (ValueError, TypeError):
+            return value or "-"
+
 
     def get_urls(self):
         urlpatterns = super().get_urls()
