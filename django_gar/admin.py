@@ -93,6 +93,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
 
     @admin.display(
         description="Affectations élève",
+        ordering="allocations_cache__cumulAffectationEleve"
     )
     def student_allocation(self, obj):
         if not obj.allocations_cache:
@@ -105,6 +106,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
 
     @admin.display(
         description="Affectations enseignant",
+        ordering="allocations_cache__cumulAffectationEnseignant"
     )
     def teacher_allocation(self, obj):
         if not obj.allocations_cache:
