@@ -84,7 +84,7 @@ class TestRefreshGarCachesCommand:
 
         # THEN
         institution.refresh_from_db()
-        assert institution.allocations_cache["cumulAffectationEnseignant"] == "226"
+        assert institution.allocations_cache["cumulAffectationEnseignant"] == 226
         assert "abonnement" in institution.subscription_cache
 
 
