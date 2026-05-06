@@ -51,7 +51,15 @@ class GARInstitution(models.Model):
             if len(lines) > 1:  # If we have header and data
                 headers = lines[0].split(";")
                 values = lines[1].split(";")  # We take the first data line
-                self.allocations_cache = dict(zip(headers, values))
+                row = dict(zip(headers, values))
+                for key in row:
+                    if key.startswith("cumulAffectation"):
+                        s = "" if row[key] is None else str(row[key]).strip()
+                        try:
+                            row[key] = int(s) if s else 0
+                        except ValueError:
+                            pass
+                self.allocations_cache = row
             else:
                 self.allocations_cache = None
 

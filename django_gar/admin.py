@@ -93,29 +93,29 @@ class GARInstitutionAdmin(admin.ModelAdmin):
 
     @admin.display(
         description="Affectations élève",
-        ordering="allocations_cache__cumulAffectationEleve"
+        ordering="allocations_cache__cumulAffectationEleve",
     )
     def student_allocation(self, obj):
         if not obj.allocations_cache:
             return "-"
         value = obj.allocations_cache.get("cumulAffectationEleve", "")
         try:
-            return int(value) if value else 0
+            return int(value) if value != "" and value is not None else 0
         except (ValueError, TypeError):
-            return value or "-"
+            return value if value not in ("", None) else "-"
 
     @admin.display(
         description="Affectations enseignant",
-        ordering="allocations_cache__cumulAffectationEnseignant"
+        ordering="allocations_cache__cumulAffectationEnseignant",
     )
     def teacher_allocation(self, obj):
         if not obj.allocations_cache:
             return "-"
         value = obj.allocations_cache.get("cumulAffectationEnseignant", "")
         try:
-            return int(value) if value else 0
+            return int(value) if value != "" and value is not None else 0
         except (ValueError, TypeError):
-            return value or "-"
+            return value if value not in ("", None) else "-"
 
 
     def get_urls(self):
