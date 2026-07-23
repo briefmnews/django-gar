@@ -67,6 +67,17 @@ def _get_gar_start_date(instance, http_method):
     return datetime.now().isoformat()
 
 
+def _format_gar_end_date(ends_at):
+    """Normalize ends_at to YYYY-MM-DD for finValidite."""
+    if not ends_at:
+        raise ValidationError(
+            "ends_at is required to create or update a GAR subscription"
+        )
+    if isinstance(ends_at, datetime):
+        ends_at = ends_at.date()
+    return ends_at.isoformat()
+
+
 def _get_gar_data_to_send(instance, http_method=None):
     """Generate XML data for GAR subscription"""
     uai = instance.uai.upper().strip()
@@ -80,7 +91,6 @@ def _get_gar_data_to_send(instance, http_method=None):
        <debutValidite>{start_date}</debutValidite>
        <finValidite>{end_date}T23:59:59</finValidite>
        <uaiEtab>{uai}</uaiEtab>
-       <categorieAffectation>transferable</categorieAffectation>
        <typeAffectation>ETABL</typeAffectation>
        <nbLicenceGlobale>ILLIMITE</nbLicenceGlobale>
        <publicCible>ELEVE</publicCible>
@@ -94,7 +104,7 @@ def _get_gar_data_to_send(instance, http_method=None):
         resources_id=GAR_RESOURCES_ID,
         organization_name=GAR_ORGANIZATION_NAME,
         start_date=_get_gar_start_date(instance, http_method),
-        end_date=instance.ends_at,
+        end_date=_format_gar_end_date(instance.ends_at),
         uai=uai,
         project_code=instance.project_code,
     )
