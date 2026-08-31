@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 from django.core.management import call_command
 from django_gar.models import GARInstitution
@@ -20,6 +22,7 @@ class TestRefreshGarCachesCommand:
             uai="0123456A",
             institution_name="Test Institution 2",
             subscription_id="test_id_2",
+            ends_at=datetime.date.today(),
         )
 
         # WHEN
@@ -47,6 +50,7 @@ class TestRefreshGarCachesCommand:
             uai="0123456A",
             institution_name="Test Institution 2",
             subscription_id="test_id_2",
+            ends_at=datetime.date.today(),
         )
 
         # WHEN
@@ -106,6 +110,7 @@ class TestRefreshGarIdentsCommand:
             uai="0123456A",  # This one won't be found in GAR
             institution_name="Test Institution 2",
             subscription_id="test_id_2",
+            ends_at=datetime.date.today(),
         )
 
         # WHEN
