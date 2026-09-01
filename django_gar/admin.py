@@ -164,6 +164,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         # Write data for each institution
         for institution in institutions:
             allocations = institution.allocations_cache or {}
+            subscription = institution.subscription_cache or {}
             writer.writerow(
                 [
                     institution.institution_name,
@@ -171,8 +172,8 @@ class GARInstitutionAdmin(admin.ModelAdmin):
                     institution.subscription_id,
                     institution.project_code,
                     settings.GAR_RESOURCES_ID,
-                    allocations.get("debutValidite", ""),
-                    allocations.get("finValidite", ""),
+                    subscription.get("debutValidite", ""),
+                    subscription.get("finValidite", ""),
                     allocations.get("cumulAffectationEleve", "0"),
                     allocations.get("cumulAffectationEnseignant", "0"),
                     allocations.get("cumulAffectationDocumentaliste", "0"),
