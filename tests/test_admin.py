@@ -91,3 +91,15 @@ class TestGARInstitutionAdmin:
         # THEN
         assert "idAbonnement : briefme_0941295X_1709542737.2902117<br/>" in response
         assert "cumulAffectationEnseignant : 226<br/>" in response
+
+    def test_ends_at_is_readonly_on_change(self, user):
+        # GIVEN
+        admin = GARInstitutionAdmin(GARInstitution, AdminSite())
+
+        # WHEN
+        change_fields = admin.get_readonly_fields(request=None, obj=user.garinstitution)
+        add_fields = admin.get_readonly_fields(request=None, obj=None)
+
+        # THEN
+        assert "ends_at" in change_fields
+        assert "ends_at" not in add_fields

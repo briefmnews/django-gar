@@ -152,3 +152,47 @@ class TestGARInstitutionForm:
 
         # THEN
         assert form.cleaned_data["institution_name"] == "LYCEE SAINT-EXUPERY"
+
+    def test_create_form_includes_ends_at(self):
+        # GIVEN / WHEN
+        form = GARInstitutionForm()
+
+        # THEN
+        assert "ends_at" in form.fields
+
+    def test_update_form_omits_ends_at(self, user):
+        # GIVEN
+        institution = user.garinstitution
+
+        # WHEN
+        form = GARInstitutionForm(instance=institution)
+
+        # THEN
+        assert "ends_at" not in form.fields
+
+    def test_update_does_not_overwrite_ends_at(
+        self, user, mock_gar_request_response
+    ):
+        # GIVEN
+        institution = user.garinstitution
+        stale_ends_at = institution.ends_at
+        live_ends_at = datetime.date.today() + datetime.timedelta(days=365)
+        institution.ends_at = live_ends_at
+        institution.save()
+        data = {
+            "uai": institution.uai,
+            "institution_name": "LYCEE RENAMED",
+            "ends_at": stale_ends_at,
+            "user": institution.user_id,
+        }
+
+        # WHEN
+        form = GARInstitutionForm(instance=institution, data=data)
+        is_valid = form.is_valid()
+        form.save()
+
+        # THEN
+        assert is_valid
+        institution.refresh_from_db()
+        assert institution.ends_at == live_ends_at
+        assert institution.institution_name == "LYCEE RENAMED"
