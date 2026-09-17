@@ -26,10 +26,10 @@ class GARInstitutionForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Disable ends_at field on update form
         instance = getattr(self, "instance", None)
-        if instance.pk:
-            self.fields["ends_at"].disabled = True
+        if instance and instance.pk:
+            # Disabled fields are still written from the stale admin instance.
+            self.fields.pop("ends_at", None)
 
     def clean_uai(self):
         return self.cleaned_data.get("uai").upper().strip()

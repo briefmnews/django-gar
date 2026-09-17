@@ -38,6 +38,11 @@ class GARInstitutionAdmin(admin.ModelAdmin):
     form = GARInstitutionForm
     change_list_template = "admin/django_gar/change_list.html"
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return (*self.readonly_fields, "ends_at")
+        return self.readonly_fields
+
     @admin.display(description="Etat de l'abonnement dans le GAR")
     def gar_subscription_response(self, obj):
         if not obj.uai:
