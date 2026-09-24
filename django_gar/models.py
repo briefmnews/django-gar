@@ -88,7 +88,7 @@ class GARInstitution(models.Model):
             update_fields=["allocations_cache", "allocations_cache_updated_at"],
         )
 
-        return response.status_code == 200
+        return response.status_code in (200, 404)
 
     def refresh_subscription_cache(self):
         if not self.uai or not self.subscription_id:
