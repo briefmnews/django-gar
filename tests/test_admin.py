@@ -103,3 +103,21 @@ class TestGARInstitutionAdmin:
         # THEN
         assert "ends_at" in change_fields
         assert "ends_at" not in add_fields
+
+    @pytest.mark.parametrize("has_allocations", [True, False])
+    def test_get_deleted_objects_protects_allocated_institution(
+        self, user, mocker, rf, admin_user, has_allocations
+    ):
+        # GIVEN
+        mocker.patch.object(
+            GARInstitution, "has_allocations", return_value=has_allocations
+        )
+        request = rf.post("/")
+        request.user = admin_user
+        admin = GARInstitutionAdmin(GARInstitution, AdminSite())
+
+        # WHEN
+        *_, protected = admin.get_deleted_objects([user.garinstitution], request)
+
+        # THEN
+        assert bool(protected) is has_allocations

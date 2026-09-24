@@ -35,9 +35,23 @@ class GARInstitution(models.Model):
     def __str__(self):
         return f"{self.institution_name} ({self.uai})"
 
+    def has_allocations(self):
+        """Refresh allocations from the GAR. A failed call counts as allocated."""
+        if not self.subscription_id:
+            return False
+
+        if not self.refresh_allocations_cache():
+            return True
+
+        return any(
+            value != 0
+            for key, value in (self.allocations_cache or {}).items()
+            if key.startswith("cumulAffectation")
+        )
+
     def refresh_allocations_cache(self):
         if not self.subscription_id:
-            return
+            return False
 
         response = get_allocations(subscription_id=self.subscription_id)
 
@@ -73,6 +87,8 @@ class GARInstitution(models.Model):
         self.save(
             update_fields=["allocations_cache", "allocations_cache_updated_at"],
         )
+
+        return response.status_code == 200
 
     def refresh_subscription_cache(self):
         if not self.uai or not self.subscription_id:

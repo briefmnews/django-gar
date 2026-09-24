@@ -43,6 +43,17 @@ class GARInstitutionAdmin(admin.ModelAdmin):
             return (*self.readonly_fields, "ends_at")
         return self.readonly_fields
 
+    def get_deleted_objects(self, objs, request):
+        deleted_objects, model_count, perms_needed, protected = (
+            super().get_deleted_objects(objs, request)
+        )
+        protected += [
+            f"{institution} : affectations en cours dans le GAR (ou décompte indisponible)"
+            for institution in objs
+            if institution.has_allocations()
+        ]
+        return deleted_objects, model_count, perms_needed, protected
+
     @admin.display(description="Etat de l'abonnement dans le GAR")
     def gar_subscription_response(self, obj):
         if not obj.uai:
