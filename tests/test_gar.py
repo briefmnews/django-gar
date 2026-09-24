@@ -302,6 +302,21 @@ class TestDeleteGarSubscription:
             timeout=30,
         )
 
+    def test_refused_deletion_is_logged(self, user, mocker, response_from_gar, caplog):
+        # GIVEN
+        mocker.patch.object(
+            requests,
+            "delete",
+            return_value=response_from_gar(409, "Affectations en cours"),
+        )
+
+        # WHEN
+        delete_gar_subscription("test_subscription")
+
+        # THEN
+        assert "Failed to delete GAR subscription test_subscription" in caplog.text
+        assert "Affectations en cours" in caplog.text
+
 
 class TestGetGarInstitutionList:
     def test_successful_list_retrieval(self, mocker, response_from_gar):

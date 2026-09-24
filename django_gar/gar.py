@@ -29,7 +29,12 @@ def delete_gar_subscription(subscription_id):
     url = get_gar_request_url(subscription_id)
     cert = get_gar_certificate()
     headers = get_gar_headers()
-    requests.delete(url, cert=cert, headers=headers, timeout=30)
+    response = requests.delete(url, cert=cert, headers=headers, timeout=30)
+    if response.status_code not in (200, 204, 404):
+        logger.error(
+            f"Failed to delete GAR subscription {subscription_id}. "
+            f"Status code: {response.status_code}, Response: {response.text}"
+        )
 
 
 def get_gar_request_url(subscription_id):
