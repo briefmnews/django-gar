@@ -33,9 +33,10 @@ class TestGARInstitutionHasAllocations:
         [
             (200, f"{ALLOCATIONS_HEADER}\nX;id;null;ark;0;0;2;0", True),
             (200, f"{ALLOCATIONS_HEADER}\nX;id;null;ark;0;0;0;0", False),
+            (404, "", False),
             (500, "", True),
         ],
-        ids=["allocated", "zero", "gar_error"],
+        ids=["allocated", "zero", "unknown_subscription", "gar_error"],
     )
     def test_has_allocations(
         self, user, mocker, response_from_gar, status_code, content, expected
