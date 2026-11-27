@@ -1,14 +1,19 @@
 import csv
 
+import requests
+
 from django.urls import path
 from django.conf import settings
 from django.contrib import admin, messages
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect, reverse
+from django.template.response import TemplateResponse
 from django.utils.html import format_html
 
-from .gar import get_allocations
-from .forms import GARInstitutionForm
+from .exceptions import DjangoGARException
+from .gar import get_allocations, get_gar_subscriptions
+from .forms import GARInstitutionForm, GARSubscriptionLookupForm
 from .models import GARInstitution
 
 GAR_RESOURCES_ID = getattr(settings, "GAR_RESOURCES_ID", "")
@@ -137,7 +142,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
     def get_urls(self):
         urlpatterns = super().get_urls()
 
-        allocations_report_url = [
+        custom_urls = [
             path(
                 "allocations-report/generate/",
                 self.admin_site.admin_view(self.allocations_report),
@@ -145,10 +150,53 @@ class GARInstitutionAdmin(admin.ModelAdmin):
                     app_label=self.model._meta.app_label,
                     model_name=self.model._meta.model_name,
                 ),
-            )
+            ),
+            path(
+                "gar-subscriptions/",
+                self.admin_site.admin_view(self.gar_subscriptions),
+                name="{app_label}_{model_name}_gar_subscriptions".format(
+                    app_label=self.model._meta.app_label,
+                    model_name=self.model._meta.model_name,
+                ),
+            ),
         ]
 
-        return allocations_report_url + urlpatterns
+        return custom_urls + urlpatterns
+
+    def gar_subscriptions(self, request):
+        if not self.has_view_permission(request):
+            raise PermissionDenied
+
+        form = GARSubscriptionLookupForm(request.GET or None)
+        subscriptions = None
+        if form.is_valid():
+            try:
+                subscriptions = [
+                    [
+                        (child.name, child.get_text(strip=True))
+                        for child in subscription.find_all(recursive=False)
+                    ]
+                    for subscription in get_gar_subscriptions(form.cleaned_data["uai"])
+                ]
+            except DjangoGARException as exc:
+                messages.error(
+                    request, f"Le GAR a renvoyé le code HTTP {exc.status_code}."
+                )
+            except requests.Timeout:
+                messages.error(
+                    request, "Le GAR n’a pas répondu avant le délai de 30 s."
+                )
+
+        context = {
+            **self.admin_site.each_context(request),
+            "opts": self.model._meta,
+            "title": "Consulter un abonnement GAR",
+            "form": form,
+            "subscriptions": subscriptions,
+        }
+        return TemplateResponse(
+            request, "admin/django_gar/gar_subscriptions.html", context
+        )
 
     def allocations_report(self, request):
         """Generate a CSV report of allocations for all institutions"""

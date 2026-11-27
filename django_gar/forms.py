@@ -13,6 +13,13 @@ GAR_SUBSCRIPTION_PREFIX = getattr(settings, "GAR_SUBSCRIPTION_PREFIX", "")
 User = get_user_model()
 
 
+class GARSubscriptionLookupForm(forms.Form):
+    uai = forms.CharField(label="UAI")
+
+    def clean_uai(self):
+        return self.cleaned_data.get("uai").upper().strip()
+
+
 class GARInstitutionForm(ModelForm):
     class Meta:
         model = GARInstitution

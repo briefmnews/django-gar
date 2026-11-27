@@ -2,6 +2,11 @@
 {% load i18n %}
 {% block object-tools-items %}
     <li>
+        <a href="{% url 'admin:django_gar_garinstitution_gar_subscriptions' %}">
+            Consulter un abonnement GAR
+        </a>
+    </li>
+    <li>
         <a href="{% url 'admin:django_gar_garinstitution_generate_allocations_report' %}">
             Rapport d’affectations
         </a>

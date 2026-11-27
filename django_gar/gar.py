@@ -53,7 +53,7 @@ def get_gar_headers():
     return headers
 
 
-def get_gar_subscription(uai, subscription_id):
+def get_gar_subscriptions(uai):
     data = """<?xml version="1.0" encoding="UTF-8"?>
         <filtres xmlns="http://www.atosworldline.com/wsabonnement/v1.0/">
               <filtre>
@@ -73,6 +73,7 @@ def get_gar_subscription(uai, subscription_id):
         data=data,
         cert=get_gar_certificate(),
         headers=get_gar_headers(),
+        timeout=30,
     )
 
     if response.status_code != 200:
@@ -81,8 +82,11 @@ def get_gar_subscription(uai, subscription_id):
         )
 
     soup = BeautifulSoup(response.text, "lxml")
-    subscriptions = soup.findAll("abonnement")
-    for subscription in subscriptions:
+    return soup.findAll("abonnement")
+
+
+def get_gar_subscription(uai, subscription_id):
+    for subscription in get_gar_subscriptions(uai):
         if subscription.find("idabonnement").text == subscription_id:
             return subscription
 

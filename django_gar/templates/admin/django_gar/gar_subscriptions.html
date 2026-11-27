@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<form method="get">
+    {{ form.as_p }}
+    <input type="submit" value="Rechercher">
+</form>
+{% if subscriptions is not None %}
+    {% if subscriptions %}
+        {% for fields in subscriptions %}
+            <p><code>
+                {% for key, value in fields %}
+                    {{ key }} : {{ value }}<br>
+                {% endfor %}
+            </code></p>
+        {% endfor %}
+    {% else %}
+        <p>Aucun abonnement GAR pour cet UAI</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
