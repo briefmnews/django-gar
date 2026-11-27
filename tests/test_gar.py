@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 from django_gar.exceptions import DjangoGARException
 from django_gar.gar import (
     get_gar_subscription,
+    get_gar_subscriptions,
     get_allocations,
     GAR_ALLOCATIONS_URL,
     get_gar_subscription_end_date,
@@ -14,6 +15,29 @@ from django_gar.gar import (
 )
 
 pytestmark = pytest.mark.django_db()
+
+
+class TestGetGarSubscriptions:
+    def test_returns_all_subscriptions(self, mocker, response_from_gar):
+        # GIVEN
+        with open(
+            "tests/fixtures/get_gar_subscription_response.xml", "r"
+        ) as xml_response:
+            mock_request = mocker.patch.object(
+                requests,
+                "request",
+                return_value=response_from_gar(200, xml_response.read()),
+            )
+
+        # WHEN
+        subscriptions = get_gar_subscriptions("0561622J")
+
+        # THEN
+        assert mock_request.call_count == 1
+        assert mock_request.call_args.kwargs["timeout"] == 30
+        assert [
+            subscription.find("idabonnement").text for subscription in subscriptions
+        ] == ["briefeco_1630592291", "briefme_1630592238"]
 
 
 class TestGetGarSubscription:
