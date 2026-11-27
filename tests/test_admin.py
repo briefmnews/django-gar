@@ -130,7 +130,7 @@ class TestGARInstitutionAdmin:
 
     def _gar_subscriptions_request(self, rf, user, uai=None):
         data = {"uai": uai} if uai is not None else None
-        request = rf.get("/", data)
+        request = rf.post("/", data)
         request.user = user
         request.session = "session"
         request._messages = FallbackStorage(request)
