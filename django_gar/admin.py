@@ -174,7 +174,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         if not self.has_view_permission(request):
             raise PermissionDenied
 
-        form = GARSubscriptionLookupForm(request.GET or None)
+        form = GARSubscriptionLookupForm(request.POST or None)
         subscriptions = None
         if form.is_valid():
             try:
