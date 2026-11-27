@@ -26,6 +26,7 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         "institution_name",
         "user",
         "uai",
+        "subscription_id",
         "ends_at",
         "student_allocation",
         "teacher_allocation",
@@ -38,7 +39,13 @@ class GARInstitutionAdmin(admin.ModelAdmin):
         "get_allocations",
     )
     ordering = ("institution_name",)
-    search_fields = ("institution_name", "user__email", "uai", "project_code")
+    search_fields = (
+        "institution_name",
+        "user__email",
+        "uai",
+        "subscription_id",
+        "project_code",
+    )
     list_filter = ["project_code"]
     form = GARInstitutionForm
     change_list_template = "admin/django_gar/change_list.html"
